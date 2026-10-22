@@ -45,8 +45,13 @@ export default function Navbar({ onOpenWaitlist }) {
         >
           <img
             src="/travelzync_logo_clean.png"
-            alt="TravelZync"
-            style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+            alt="TravelZync Official Logo"
+            style={{
+              width: '42px',
+              height: '42px',
+              objectFit: 'contain',
+              borderRadius: '9px',
+            }}
           />
           <div className="d-flex flex-column">
             <span

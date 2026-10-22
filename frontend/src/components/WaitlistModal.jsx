@@ -8,7 +8,6 @@ import {
   MapPin,
   CheckCircle,
   AlertCircle,
-  Sparkles,
   ArrowRight,
   Share2,
   Copy,
@@ -29,7 +28,7 @@ export default function WaitlistModal({
     phone_number: '',
     district: '',
     consent_updates: true,
-    website_hp: '', // Honeypot anti-spam
+    website_hp: '',
   });
 
   const [districts, setDistricts] = useState([]);
@@ -67,7 +66,6 @@ export default function WaitlistModal({
     e.preventDefault();
     setErrorMsg('');
 
-    // Client-side email validation
     if (!formData.email || !formData.email.includes('@') || !formData.email.includes('.')) {
       setErrorMsg('Please enter a valid email address.');
       return;
@@ -138,24 +136,23 @@ export default function WaitlistModal({
           {!successResult ? (
             /* WAITLIST SIGNUP FORM */
             <div className="p-4 p-md-5">
-              {/* Header */}
+              {/* Header with Official Logo */}
               <div className="text-center mb-4">
                 <div
-                  className="rounded-circle mx-auto p-2 d-flex align-items-center justify-content-center mb-2 shadow-sm"
+                  className="rounded-3 mx-auto p-1 d-flex align-items-center justify-content-center mb-2 shadow-sm"
                   style={{
-                    backgroundColor: '#fff1f2',
-                    width: '56px',
-                    height: '56px',
-                    border: '1.5px solid rgba(237,28,36,0.2)',
+                    backgroundColor: '#fff',
+                    width: '64px',
+                    height: '64px',
                   }}
                 >
                   <img
                     src="/travelzync_logo_clean.png"
-                    alt="TravelZync"
-                    style={{ width: '34px', height: '34px', objectFit: 'contain' }}
+                    alt="TravelZync Official Logo"
+                    style={{ width: '56px', height: '56px', objectFit: 'contain', borderRadius: '10px' }}
                   />
                 </div>
-                <h3 className="fw-extrabold text-dark mb-1" style={{ fontSize: '1.5rem' }}>
+                <h3 className="fw-extrabold text-dark mb-1" style={{ fontSize: '1.45rem' }}>
                   Join the TravelZync Waitlist
                 </h3>
                 <p className="text-muted small mb-0" style={{ fontSize: '0.875rem' }}>
@@ -172,7 +169,6 @@ export default function WaitlistModal({
               )}
 
               <form onSubmit={handleSubmit}>
-                {/* Honeypot hidden input for anti-bot protection */}
                 <input
                   type="text"
                   name="website_hp"

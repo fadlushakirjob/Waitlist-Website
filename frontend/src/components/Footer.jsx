@@ -27,11 +27,11 @@ export default function Footer({
         <div className="row gy-4 mb-4">
           {/* Brand Info */}
           <div className="col-lg-4 col-md-6">
-            <div className="d-flex align-items-center gap-2 mb-2.5">
+            <div className="d-flex align-items-center gap-2.5 mb-2.5">
               <img
                 src="/travelzync_logo_clean.png"
-                alt="TravelZync Logo"
-                style={{ width: '38px', height: '38px', objectFit: 'contain' }}
+                alt="TravelZync Official Logo"
+                style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }}
               />
               <div className="d-flex flex-column">
                 <span className="fw-bold fs-5 lh-1 text-white">

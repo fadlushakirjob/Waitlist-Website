@@ -117,13 +117,12 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
         <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="modal-header bg-dark text-white border-0 px-4 py-3 d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center gap-2">
-              <div
-                className="rounded-circle p-1 d-flex align-items-center justify-content-center text-white"
-                style={{ backgroundColor: '#ED1C24', width: '32px', height: '32px' }}
-              >
-                <Lock size={16} />
-              </div>
+            <div className="d-flex align-items-center gap-2.5">
+              <img
+                src="/travelzync_logo_clean.png"
+                alt="TravelZync Official Logo"
+                style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '7px' }}
+              />
               <div>
                 <h5 className="modal-title fw-bold fs-6 mb-0">TravelZync Admin Management Portal</h5>
                 <span className="text-white-50" style={{ fontSize: '0.75rem' }}>
@@ -159,12 +158,11 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
             {!isAuthenticated ? (
               /* LOGIN SCREEN */
               <div className="max-w-md mx-auto my-5 p-4 rounded-4 bg-white border shadow-sm text-center" style={{ maxWidth: '420px' }}>
-                <div
-                  className="rounded-circle mx-auto p-3 d-flex align-items-center justify-content-center mb-3 bg-tz-red-light"
-                  style={{ width: '60px', height: '60px' }}
-                >
-                  <Lock size={28} className="text-tz-red" />
-                </div>
+                <img
+                  src="/travelzync_logo_clean.png"
+                  alt="TravelZync"
+                  style={{ width: '64px', height: '64px', objectFit: 'contain', borderRadius: '12px', marginBottom: '1rem' }}
+                />
                 <h4 className="fw-bold text-dark mb-1">Authorized Staff Login</h4>
                 <p className="text-muted small mb-4">
                   Enter your team security key to access waitlist records.
