@@ -10,8 +10,8 @@
   --tz-text-muted: #6b7280;
   --tz-bg-light: #f9fafb;
   --tz-border: #e5e7eb;
-  --tz-card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-  --tz-hover-shadow: 0 20px 35px -5px rgba(237, 28, 36, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+  --tz-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --tz-hover-shadow: 0 12px 30px rgba(237, 28, 36, 0.12);
 }
 
 * {
@@ -27,6 +27,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* Unified Container System */
+.tz-container {
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .tz-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 /* Typography Helpers */
@@ -52,14 +69,13 @@ body {
 
 /* Custom Red Primary Buttons */
 .btn-tz-primary {
-  background: linear-gradient(135deg, #ED1C24 0%, #db141b 100%);
+  background: #ED1C24;
   color: #ffffff !important;
-  border: none;
+  border: 1px solid #ED1C24;
   font-weight: 600;
-  padding: 0.65rem 1.6rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 9999px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px 0 rgba(237, 28, 36, 0.35);
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -67,9 +83,10 @@ body {
 }
 
 .btn-tz-primary:hover {
-  background: linear-gradient(135deg, #d1121a 0%, #ba0d14 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px 0 rgba(237, 28, 36, 0.45);
+  background: #d1121a;
+  border-color: #d1121a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(237, 28, 36, 0.35);
   color: #ffffff !important;
 }
 
@@ -82,7 +99,7 @@ body {
   color: var(--tz-dark);
   border: 1.5px solid var(--tz-border);
   font-weight: 600;
-  padding: 0.65rem 1.6rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 9999px;
   transition: all 0.2s ease;
   display: inline-flex;
@@ -99,97 +116,53 @@ body {
 /* Modern Card Hover Effects */
 .tz-card {
   background: #ffffff;
-  border: 1px solid rgba(229, 231, 235, 0.8);
-  border-radius: 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
   box-shadow: var(--tz-card-shadow);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s ease;
 }
 
 .tz-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(237, 28, 36, 0.3);
+  border-color: rgba(237, 28, 36, 0.35);
   box-shadow: var(--tz-hover-shadow);
 }
 
-/* Glassmorphism Accents */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-}
-
-/* Pill Badges */
-.tz-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  background-color: var(--tz-bg-light);
-  border: 1px solid var(--tz-border);
-  color: var(--tz-dark-muted);
-}
-
-.tz-badge-red {
-  background-color: #fff1f2;
-  border: 1px solid rgba(237, 28, 36, 0.2);
-  color: var(--tz-red);
-}
-
-/* Keyframe Animations */
-@keyframes floatSlow {
+/* Animations */
+@keyframes floatSubtle {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
 }
 
 .animate-float {
-  animation: floatSlow 5s ease-in-out infinite;
-}
-
-@keyframes pulseSubtle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.02);
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulseSubtle 3s ease-in-out infinite;
+  animation: floatSubtle 4s ease-in-out infinite;
 }
 
 /* Section Spacing */
 .section-padding {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
 }
 
 @media (max-width: 768px) {
   .section-padding {
-    padding-top: 3.5rem;
-    padding-bottom: 3.5rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {

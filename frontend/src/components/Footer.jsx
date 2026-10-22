@@ -1,9 +1,6 @@
 import React from 'react';
 import {
-  Mail,
-  MapPin,
   Lock,
-  Heart,
 } from 'lucide-react';
 import {
   LinkedInIcon,
@@ -26,27 +23,27 @@ export default function Footer({
         borderTop: '3px solid #ED1C24',
       }}
     >
-      <div className="container">
-        <div className="row gy-4 mb-5">
+      <div className="tz-container">
+        <div className="row gy-4 mb-4">
           {/* Brand Info */}
           <div className="col-lg-4 col-md-6">
-            <div className="d-flex align-items-center gap-2 mb-3">
+            <div className="d-flex align-items-center gap-2 mb-2.5">
               <img
                 src="/travelzync_logo_clean.png"
                 alt="TravelZync Logo"
-                style={{ width: '42px', height: '42px', objectFit: 'contain' }}
+                style={{ width: '38px', height: '38px', objectFit: 'contain' }}
               />
               <div className="d-flex flex-column">
-                <span className="fw-bold fs-4 lh-1 text-white">
+                <span className="fw-bold fs-5 lh-1 text-white">
                   Travel<span style={{ color: '#ED1C24' }}>Zync</span>
                 </span>
-                <span className="font-script fs-6 text-white-50 mt-1">
+                <span className="font-script fs-6 text-white-50 mt-0.5">
                   Your journey perfectly synced.
                 </span>
               </div>
             </div>
 
-            <p className="text-secondary small mb-4" style={{ color: '#94A3B8', lineHeight: 1.6 }}>
+            <p className="text-secondary small mb-3" style={{ color: '#94A3B8', lineHeight: 1.55, fontSize: '0.825rem' }}>
               TravelZync Labs Private Limited is pioneering next-generation public transportation
               intelligence for Kerala. Real-time bus tracking, digital ticketing, and AI travel
               guidance tailored for daily commuters.
@@ -61,7 +58,7 @@ export default function Footer({
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
                 title="LinkedIn"
               >
-                <LinkedInIcon size={15} color="#ffffff" />
+                <LinkedInIcon size={14} color="#ffffff" />
               </a>
               <a
                 href="https://instagram.com/travelzync"
@@ -70,7 +67,7 @@ export default function Footer({
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
                 title="Instagram"
               >
-                <InstagramIcon size={15} color="#ffffff" />
+                <InstagramIcon size={14} color="#ffffff" />
               </a>
               <a
                 href="https://youtube.com/@travelzync"
@@ -79,7 +76,7 @@ export default function Footer({
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
                 title="YouTube"
               >
-                <YouTubeIcon size={15} color="#ffffff" />
+                <YouTubeIcon size={14} color="#ffffff" />
               </a>
               <a
                 href="https://x.com/travelzync"
@@ -88,17 +85,17 @@ export default function Footer({
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
                 title="X (Twitter)"
               >
-                <XTwitterIcon size={15} color="#ffffff" />
+                <XTwitterIcon size={14} color="#ffffff" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="col-lg-2 col-md-6">
-            <h6 className="text-uppercase fw-bold text-white fs-6 mb-3 tracking-wider">
+            <h6 className="text-uppercase fw-bold text-white small mb-3 tracking-wider" style={{ fontSize: '0.8rem' }}>
               Navigation
             </h6>
-            <ul className="list-unstyled d-flex flex-column gap-2 small" style={{ color: '#94A3B8' }}>
+            <ul className="list-unstyled d-flex flex-column gap-2 small" style={{ color: '#94A3B8', fontSize: '0.825rem' }}>
               <li>
                 <a href="#home" className="text-decoration-none text-secondary hover-white">
                   Home
@@ -129,10 +126,10 @@ export default function Footer({
 
           {/* Key Milestones */}
           <div className="col-lg-3 col-md-6">
-            <h6 className="text-uppercase fw-bold text-white fs-6 mb-3 tracking-wider">
+            <h6 className="text-uppercase fw-bold text-white small mb-3 tracking-wider" style={{ fontSize: '0.8rem' }}>
               Verified Highlights
             </h6>
-            <ul className="list-unstyled d-flex flex-column gap-2 small text-secondary">
+            <ul className="list-unstyled d-flex flex-column gap-2 small text-secondary" style={{ fontSize: '0.825rem' }}>
               <li className="d-flex align-items-center gap-1.5">
                 <span className="text-danger">•</span>
                 <span>Best Startup Runner-up, NIT Calicut</span>
@@ -143,7 +140,7 @@ export default function Footer({
               </li>
               <li className="d-flex align-items-center gap-1.5">
                 <span className="text-danger">•</span>
-                <span>KSRTC & Private Fleet Integration Talks</span>
+                <span>KSRTC & Fleet Integration Talks</span>
               </li>
               <li className="d-flex align-items-center gap-1.5">
                 <span className="text-danger">•</span>
@@ -154,19 +151,19 @@ export default function Footer({
 
           {/* Legal & Operations */}
           <div className="col-lg-3 col-md-6">
-            <h6 className="text-uppercase fw-bold text-white fs-6 mb-3 tracking-wider">
+            <h6 className="text-uppercase fw-bold text-white small mb-3 tracking-wider" style={{ fontSize: '0.8rem' }}>
               Headquarters
             </h6>
-            <div className="small text-secondary mb-3" style={{ color: '#94A3B8', lineHeight: 1.6 }}>
-              <div className="fw-semibold text-white mb-1">TravelZync Labs Private Limited</div>
+            <div className="small text-secondary mb-3" style={{ color: '#94A3B8', lineHeight: 1.5, fontSize: '0.825rem' }}>
+              <div className="fw-semibold text-white mb-0.5">TravelZync Labs Private Limited</div>
               <div>Calicut & Kochi, Kerala, India</div>
               <div>Email: contact@travelzync.com</div>
-              <div>Domain: travelzync.com</div>
             </div>
 
             <button
               className="btn btn-tz-primary btn-sm px-3 py-1.5"
               onClick={onOpenWaitlist}
+              style={{ fontSize: '0.8rem' }}
             >
               Join Official Waitlist
             </button>
@@ -175,8 +172,8 @@ export default function Footer({
 
         {/* Bottom Sub-Footer Bar */}
         <div
-          className="pt-4 border-top border-secondary d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-secondary small"
-          style={{ borderColor: 'rgba(255,255,255,0.1)' }}
+          className="pt-3 border-top d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 text-secondary small"
+          style={{ borderColor: 'rgba(255,255,255,0.1)', fontSize: '0.8rem' }}
         >
           <div>
             © {new Date().getFullYear()} TravelZync Labs Private Limited. All rights reserved.
@@ -186,6 +183,7 @@ export default function Footer({
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white"
               onClick={onOpenPrivacy}
+              style={{ fontSize: '0.8rem' }}
             >
               Privacy Policy
             </button>
@@ -193,6 +191,7 @@ export default function Footer({
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white"
               onClick={onOpenTerms}
+              style={{ fontSize: '0.8rem' }}
             >
               Terms and Conditions
             </button>
@@ -201,6 +200,7 @@ export default function Footer({
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white d-flex align-items-center gap-1"
               onClick={onOpenAdmin}
               title="Team Admin Dashboard"
+              style={{ fontSize: '0.8rem' }}
             >
               <Lock size={12} />
               <span>Admin Portal</span>
