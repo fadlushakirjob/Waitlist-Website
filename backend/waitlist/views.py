@@ -8,8 +8,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from .models import WaitlistEntry, KERALA_DISTRICTS
+from .models import WaitlistEntry, ContactInquiry, KERALA_DISTRICTS
 from .serializers import WaitlistJoinSerializer, WaitlistAdminSerializer
+from .emails import send_waitlist_welcome_email, send_contact_inquiry_notification
 
 
 def get_client_ip(request):
@@ -22,10 +23,6 @@ def get_client_ip(request):
 
 
 def verify_admin_key(request):
-    """
-    Simple secure token check for frontend Admin Portal.
-    Defaults to 'travelzync_admin_2026' or settings.ADMIN_DASHBOARD_KEY.
-    """
     token = request.headers.get('X-Admin-Key') or request.GET.get('admin_key')
     expected = getattr(settings, 'ADMIN_DASHBOARD_KEY', 'travelzync_admin_2026')
     return token == expected or request.user.is_staff
@@ -53,6 +50,9 @@ class WaitlistJoinView(APIView):
                 user_agent=user_agent
             )
 
+            # Trigger automated confirmation email
+            send_waitlist_welcome_email(entry)
+
             total_count = WaitlistEntry.objects.count()
 
             return Response({
@@ -69,7 +69,6 @@ class WaitlistJoinView(APIView):
                 }
             }, status=status.HTTP_201_CREATED)
 
-        # Return clear formatted error messages
         errors = serializer.errors
         first_error_msg = "Please check your information and try again."
         if "email" in errors:
@@ -84,12 +83,43 @@ class WaitlistJoinView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ContactInquiryView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        name = request.data.get('name', '').strip()
+        email = request.data.get('email', '').strip()
+        role = request.data.get('role', 'commuter')
+        message = request.data.get('message', '').strip()
+
+        if not name or not email or not message:
+            return Response(
+                {"success": False, "message": "Name, email and message are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        ip_addr = get_client_ip(request)
+        inquiry = ContactInquiry.objects.create(
+            name=name,
+            email=email,
+            role=role,
+            message=message,
+            ip_address=ip_addr
+        )
+
+        send_contact_inquiry_notification(inquiry)
+
+        return Response({
+            "success": True,
+            "message": "Thank you! Your message has been received by TravelZync Labs."
+        })
+
+
 class WaitlistStatsView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
         total_registered = WaitlistEntry.objects.count()
-        # District distribution
         district_counts = (
             WaitlistEntry.objects.exclude(district='')
             .values('district')
@@ -97,7 +127,6 @@ class WaitlistStatsView(APIView):
             .order_by('-count')
         )
 
-        # Virtual base count for marketing display
         public_counter = 10000 + total_registered
 
         return Response({
@@ -119,7 +148,6 @@ class WaitlistAdminListView(APIView):
 
         queryset = WaitlistEntry.objects.all()
 
-        # Search filter
         search = request.GET.get('search', '').strip()
         if search:
             queryset = queryset.filter(
@@ -128,12 +156,10 @@ class WaitlistAdminListView(APIView):
                 Q(phone_number__icontains=search)
             )
 
-        # District filter
         district = request.GET.get('district', '').strip()
         if district:
             queryset = queryset.filter(district__iexact=district)
 
-        # Date filter (YYYY-MM-DD)
         date_from = request.GET.get('date_from', '').strip()
         date_to = request.GET.get('date_to', '').strip()
         if date_from:
@@ -169,7 +195,6 @@ class WaitlistAdminExportCSVView(APIView):
 
         queryset = WaitlistEntry.objects.all().order_by('-created_at')
 
-        # Allow same filters for export
         search = request.GET.get('search', '').strip()
         if search:
             queryset = queryset.filter(

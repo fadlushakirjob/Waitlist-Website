@@ -28,13 +28,40 @@ export async function joinWaitlist(data) {
   }
 }
 
+export async function sendContactInquiry(data) {
+  try {
+    const response = await fetch(`${API_BASE}/contact/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    return {
+      ok: response.ok,
+      status: response.status,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      status: 500,
+      data: {
+        success: false,
+        message: 'Could not connect to server.',
+      },
+    };
+  }
+}
+
 export async function getWaitlistStats() {
   try {
     const response = await fetch(`${API_BASE}/stats/`);
     if (!response.ok) throw new Error('Stats fetch failed');
     return await response.json();
   } catch (err) {
-    // Fallback default stats for zero-downtime UI
     return {
       total_registered: 48,
       public_display_count: 10428,
@@ -51,7 +78,6 @@ export async function getKeralaDistricts() {
     if (!response.ok) throw new Error('Districts fetch failed');
     return await response.json();
   } catch (err) {
-    // Default 14 Kerala districts fallback
     return [
       { code: 'Alappuzha', name: 'Alappuzha' },
       { code: 'Ernakulam', name: 'Ernakulam (Kochi)' },

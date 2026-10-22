@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle, Bus } from 'lucide-react';
+import { sendContactInquiry } from '../services/api';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -9,14 +10,22 @@ export default function ContactSection() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', role: 'commuter', message: '' });
-      setSubmitted(false);
-    }, 4000);
+    setIsSending(true);
+
+    const res = await sendContactInquiry(formData);
+    setIsSending(false);
+
+    if (res.ok) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setFormData({ name: '', email: '', role: 'commuter', message: '' });
+        setSubmitted(false);
+      }, 5000);
+    }
   };
 
   return (
@@ -104,7 +113,7 @@ export default function ContactSection() {
                 <div className="alert alert-success d-flex align-items-center gap-2 py-3 px-3 rounded-3 small">
                   <CheckCircle size={18} className="text-success flex-shrink-0" />
                   <div>
-                    <strong>Message received!</strong> Thank you for reaching out to TravelZync Labs.
+                    <strong>Message received!</strong> Thank you for reaching out to TravelZync Labs. An email notification has been dispatched.
                   </div>
                 </div>
               ) : (
@@ -160,9 +169,17 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  <button type="submit" className="btn btn-tz-primary px-3 py-2 btn-sm">
-                    <Send size={14} />
-                    <span>Send Message</span>
+                  <button
+                    type="submit"
+                    disabled={isSending}
+                    className="btn btn-tz-primary px-3 py-2 btn-sm"
+                  >
+                    {isSending ? (
+                      <span className="spinner-border spinner-border-sm me-1" />
+                    ) : (
+                      <Send size={14} />
+                    )}
+                    <span>{isSending ? 'Sending...' : 'Send Message'}</span>
                   </button>
                 </form>
               )}

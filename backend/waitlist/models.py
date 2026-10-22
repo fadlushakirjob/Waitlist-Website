@@ -18,9 +18,15 @@ KERALA_DISTRICTS = [
     ('Wayanad', 'Wayanad'),
 ]
 
+INQUIRY_ROLES = [
+    ('commuter', 'Regular Commuter / Passenger'),
+    ('bus_operator', 'Private Bus Owner / Operator'),
+    ('investor', 'Ecosystem Partner / Institutional'),
+    ('media', 'Media & Press Inquiry'),
+]
+
 
 class WaitlistEntry(models.Model):
-    # Starting base for queue numbers to reflect established waitlist momentum
     QUEUE_BASE = 10420
 
     email = models.EmailField(
@@ -82,7 +88,6 @@ class WaitlistEntry(models.Model):
         ordering = ['-created_at']
 
     def save(self, *args, **kwargs):
-        # Auto-assign sequential queue number if not set
         if not self.queue_number:
             last_entry = WaitlistEntry.objects.order_by('-queue_number').first()
             if last_entry and last_entry.queue_number:
@@ -94,3 +99,20 @@ class WaitlistEntry(models.Model):
     def __str__(self):
         name_str = f" ({self.full_name})" if self.full_name else ""
         return f"#{self.queue_number} - {self.email}{name_str}"
+
+
+class ContactInquiry(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField(max_length=254)
+    role = models.CharField(max_length=50, choices=INQUIRY_ROLES, default='commuter')
+    message = models.TextField()
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Contact Inquiry"
+        verbose_name_plural = "Contact Inquiries"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} ({self.get_role_display()}) - {self.email}"

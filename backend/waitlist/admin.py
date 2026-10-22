@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import WaitlistEntry
+from .models import WaitlistEntry, ContactInquiry
 
 
 @admin.action(description="Export selected registrations to CSV")
@@ -57,4 +57,13 @@ class WaitlistEntryAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     readonly_fields = ('queue_number', 'ip_address', 'user_agent', 'created_at')
     actions = [export_selected_to_csv]
+    ordering = ('-created_at',)
+
+
+@admin.register(ContactInquiry)
+class ContactInquiryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'role', 'created_at', 'ip_address')
+    list_filter = ('role', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    date_hierarchy = 'created_at'
     ordering = ('-created_at',)
