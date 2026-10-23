@@ -1,5 +1,8 @@
-const API_HOST = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
-const API_BASE = `${API_HOST}/api/waitlist`;
+let rawHost = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+if (rawHost && !rawHost.startsWith('http://') && !rawHost.startsWith('https://')) {
+  rawHost = `https://${rawHost}`;
+}
+const API_BASE = rawHost ? `${rawHost}/api/waitlist` : '/api/waitlist';
 
 export async function joinWaitlist(data) {
   try {
