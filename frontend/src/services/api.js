@@ -1,4 +1,5 @@
-const API_BASE = '/api/waitlist';
+const API_HOST = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+const API_BASE = `${API_HOST}/api/waitlist`;
 
 export async function joinWaitlist(data) {
   try {
