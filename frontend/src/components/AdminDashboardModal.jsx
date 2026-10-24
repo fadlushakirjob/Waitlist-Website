@@ -49,37 +49,47 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
   }, [adminKey, isOpen]);
 
   const loadData = async (key) => {
+    const cleanKey = (key || '').trim();
+    if (!cleanKey) return;
+
     setIsLoading(true);
     setErrorMsg('');
 
-    const res = await getAdminRegistrations(key, {
-      search,
-      district,
-      date_from: dateFrom,
-      date_to: dateTo,
-    });
+    try {
+      const res = await getAdminRegistrations(cleanKey, {
+        search,
+        district,
+        date_from: dateFrom,
+        date_to: dateTo,
+      });
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    if (res.ok) {
-      setIsAuthenticated(true);
-      setRegistrations(res.data.registrations || []);
-      setTotalCount(res.data.total_count || 0);
-      localStorage.setItem('tz_admin_key', key);
-    } else {
+      if (res.ok) {
+        setIsAuthenticated(true);
+        setRegistrations(res.data.registrations || []);
+        setTotalCount(res.data.total_count || 0);
+        localStorage.setItem('tz_admin_key', cleanKey);
+      } else {
+        setIsAuthenticated(false);
+        setErrorMsg(res.data?.error || res.data?.message || 'Invalid Admin Access Key. Expected: travelzync_admin_2026');
+      }
+    } catch (err) {
+      setIsLoading(false);
       setIsAuthenticated(false);
-      setErrorMsg(res.data?.error || 'Invalid Admin Access Key.');
+      setErrorMsg('Could not connect to backend server. Make sure the backend is running on http://127.0.0.1:8000.');
     }
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!keyInput) {
+    const cleanKey = (keyInput || '').trim();
+    if (!cleanKey) {
       setErrorMsg('Please enter the Admin Key.');
       return;
     }
-    setAdminKey(keyInput);
-    loadData(keyInput);
+    setAdminKey(cleanKey);
+    loadData(cleanKey);
   };
 
   const handleLogout = () => {

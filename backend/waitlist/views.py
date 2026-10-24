@@ -24,8 +24,10 @@ def get_client_ip(request):
 
 def verify_admin_key(request):
     token = request.headers.get('X-Admin-Key') or request.GET.get('admin_key')
-    expected = getattr(settings, 'ADMIN_DASHBOARD_KEY', 'travelzync_admin_2026')
-    return token == expected or request.user.is_staff
+    if token:
+        token = str(token).strip()
+    expected = str(getattr(settings, 'ADMIN_DASHBOARD_KEY', 'travelzync_admin_2026')).strip()
+    return token == expected or (request.user and request.user.is_staff)
 
 
 class DistrictChoicesView(APIView):

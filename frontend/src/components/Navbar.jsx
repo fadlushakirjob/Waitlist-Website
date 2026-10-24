@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X, Lock } from 'lucide-react';
 
-export default function Navbar({ onOpenWaitlist }) {
+export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -139,15 +139,29 @@ export default function Navbar({ onOpenWaitlist }) {
             </li>
           </ul>
 
-          <button
-            className="btn btn-tz-primary"
-            onClick={onOpenWaitlist}
-            id="nav-join-waitlist-btn"
-            style={{ padding: '0.55rem 1.35rem', fontSize: '0.9rem' }}
-          >
-            <span>Join Waitlist</span>
-            <ArrowRight size={15} />
-          </button>
+          <div className="d-flex align-items-center gap-2">
+            <button
+              className="btn btn-tz-primary"
+              onClick={onOpenWaitlist}
+              id="nav-join-waitlist-btn"
+              style={{ padding: '0.55rem 1.35rem', fontSize: '0.9rem' }}
+            >
+              <span>Join Waitlist</span>
+              <ArrowRight size={15} />
+            </button>
+
+            {onOpenAdmin && (
+              <button
+                type="button"
+                className="btn btn-outline-secondary rounded-circle p-0 d-inline-flex align-items-center justify-content-center shadow-2xs"
+                onClick={onOpenAdmin}
+                title="Open Admin Portal"
+                style={{ width: '38px', height: '38px' }}
+              >
+                <Lock size={15} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -207,7 +221,7 @@ export default function Navbar({ onOpenWaitlist }) {
             </li>
           </ul>
           <button
-            className="btn btn-tz-primary w-100 py-2 justify-content-center"
+            className="btn btn-tz-primary w-100 py-2 justify-content-center mb-2"
             onClick={() => {
               setMobileMenuOpen(false);
               onOpenWaitlist();
@@ -216,6 +230,20 @@ export default function Navbar({ onOpenWaitlist }) {
             <span>Join Waitlist</span>
             <ArrowRight size={15} />
           </button>
+
+          {onOpenAdmin && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenAdmin();
+              }}
+            >
+              <Lock size={15} />
+              <span>Admin Portal</span>
+            </button>
+          )}
         </div>
       )}
     </nav>
