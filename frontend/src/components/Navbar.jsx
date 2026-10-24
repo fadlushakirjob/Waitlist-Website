@@ -56,9 +56,13 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
           <div className="d-flex flex-column">
             <span
               className="fw-extrabold fs-4 lh-1"
-              style={{ color: '#111827', letterSpacing: '-0.5px' }}
+              style={{
+                color: '#111827',
+                letterSpacing: '-0.5px',
+                fontWeight: 800,
+              }}
             >
-              Travel<span style={{ color: '#ED1C24' }}>Zync</span>
+              Travel<span style={{ color: '#ED1C24', fontWeight: 800 }}>Zync</span>
             </span>
             <span
               className="font-script fs-6 lh-1 mt-0.5"

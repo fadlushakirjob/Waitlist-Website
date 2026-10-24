@@ -47,6 +47,14 @@ body {
 }
 
 /* Typography Helpers */
+.fw-extrabold {
+  font-weight: 800 !important;
+}
+
+.fw-black {
+  font-weight: 900 !important;
+}
+
 .font-script {
   font-family: 'Caveat', cursive;
 }
