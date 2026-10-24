@@ -1,12 +1,65 @@
-let rawHost = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
-if (rawHost && !rawHost.startsWith('http://') && !rawHost.startsWith('https://')) {
-  rawHost = `https://${rawHost}`;
+export function getBackendBase() {
+  const custom = (localStorage.getItem('tz_backend_url') || '').trim().replace(/\/+$/, '');
+  if (custom) {
+    return custom.startsWith('http://') || custom.startsWith('https://') ? custom : `https://${custom}`;
+  }
+  let rawHost = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+  if (rawHost) {
+    return rawHost.startsWith('http://') || rawHost.startsWith('https://') ? rawHost : `https://${rawHost}`;
+  }
+  return '';
 }
-const API_BASE = rawHost ? `${rawHost}/api/waitlist` : '/api/waitlist';
+
+export function getApiBase() {
+  const host = getBackendBase();
+  return host ? `${host}/api/waitlist` : '/api/waitlist';
+}
+
+export function setCustomBackendUrl(url) {
+  if (url && url.trim()) {
+    let clean = url.trim().replace(/\/+$/, '');
+    if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
+      clean = `https://${clean}`;
+    }
+    localStorage.setItem('tz_backend_url', clean);
+  } else {
+    localStorage.removeItem('tz_backend_url');
+  }
+}
+
+export async function pingBackend(customUrl = '') {
+  try {
+    let host = (customUrl || getBackendBase()).trim().replace(/\/+$/, '');
+    if (host && !host.startsWith('http://') && !host.startsWith('https://')) {
+      host = `https://${host}`;
+    }
+    const target = host ? `${host}/api/waitlist/stats/` : '/api/waitlist/stats/';
+    const response = await fetch(target, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      return {
+        ok: false,
+        error: 'Target URL returned HTML (the static frontend) instead of backend API. Please provide the URL of your Render Web Service (e.g. https://travelzync-backend.onrender.com).',
+      };
+    }
+
+    const data = await response.json();
+    return { ok: response.ok, data };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err.message || 'Connection failed. Ensure the backend URL is correct and active.',
+    };
+  }
+}
 
 export async function joinWaitlist(data) {
   try {
-    const response = await fetch(`${API_BASE}/join/`, {
+    const response = await fetch(`${getApiBase()}/join/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +87,7 @@ export async function joinWaitlist(data) {
 
 export async function sendContactInquiry(data) {
   try {
-    const response = await fetch(`${API_BASE}/contact/`, {
+    const response = await fetch(`${getApiBase()}/contact/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +115,7 @@ export async function sendContactInquiry(data) {
 
 export async function getWaitlistStats() {
   try {
-    const response = await fetch(`${API_BASE}/stats/`);
+    const response = await fetch(`${getApiBase()}/stats/`);
     if (!response.ok) throw new Error('Stats fetch failed');
     return await response.json();
   } catch (err) {
@@ -78,7 +131,7 @@ export async function getWaitlistStats() {
 
 export async function getKeralaDistricts() {
   try {
-    const response = await fetch(`${API_BASE}/districts/`);
+    const response = await fetch(`${getApiBase()}/districts/`);
     if (!response.ok) throw new Error('Districts fetch failed');
     return await response.json();
   } catch (err) {
@@ -105,17 +158,31 @@ export async function getAdminRegistrations(adminKey, filters = {}) {
   try {
     const cleanKey = (adminKey || '').trim();
     const params = new URLSearchParams();
+    params.append('admin_key', cleanKey);
     if (filters.search) params.append('search', filters.search);
     if (filters.district) params.append('district', filters.district);
     if (filters.date_from) params.append('date_from', filters.date_from);
     if (filters.date_to) params.append('date_to', filters.date_to);
 
-    const url = `${API_BASE}/admin/registrations/?${params.toString()}`;
+    const url = `${getApiBase()}/admin/registrations/?${params.toString()}`;
     const response = await fetch(url, {
+      method: 'GET',
       headers: {
+        Accept: 'application/json',
         'X-Admin-Key': cleanKey,
       },
     });
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      return {
+        ok: false,
+        status: response.status,
+        data: {
+          error: `Backend at ${getBackendBase() || 'local server'} returned HTML instead of JSON. Ensure your Backend URL is set to your Render Web Service (e.g. https://travelzync-backend.onrender.com).`,
+        },
+      };
+    }
 
     const result = await response.json();
     return {
@@ -124,11 +191,12 @@ export async function getAdminRegistrations(adminKey, filters = {}) {
       data: result,
     };
   } catch (err) {
+    const currentBase = getBackendBase() || 'http://127.0.0.1:8000';
     return {
       ok: false,
       status: 500,
       data: {
-        error: 'Unable to connect to backend server. Please verify the backend is running on port 8000.',
+        error: `Could not connect to backend at ${currentBase}. If deployed on Render free tier, the backend may take ~45 seconds to wake up from sleep. Check your Backend URL settings below.`,
       },
     };
   }
@@ -140,15 +208,16 @@ export function getAdminExportCSVUrl(adminKey, filters = {}) {
   params.append('admin_key', cleanKey);
   if (filters.search) params.append('search', filters.search);
   if (filters.district) params.append('district', filters.district);
-  return `${API_BASE}/admin/export-csv/?${params.toString()}`;
+  return `${getApiBase()}/admin/export-csv/?${params.toString()}`;
 }
 
 export async function deleteAdminRegistration(adminKey, id) {
   try {
     const cleanKey = (adminKey || '').trim();
-    const response = await fetch(`${API_BASE}/admin/registrations/${id}/`, {
+    const response = await fetch(`${getApiBase()}/admin/registrations/${id}/?admin_key=${cleanKey}`, {
       method: 'DELETE',
       headers: {
+        Accept: 'application/json',
         'X-Admin-Key': cleanKey,
       },
     });

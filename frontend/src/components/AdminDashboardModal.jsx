@@ -18,6 +18,9 @@ import {
   getAdminExportCSVUrl,
   deleteAdminRegistration,
   getKeralaDistricts,
+  getBackendBase,
+  setCustomBackendUrl,
+  pingBackend,
 } from '../services/api';
 
 export default function AdminDashboardModal({ isOpen, onClose }) {
@@ -28,6 +31,12 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
   const [keyInput, setKeyInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Backend Connection Settings
+  const [backendUrl, setBackendUrl] = useState(getBackendBase() || '');
+  const [showServerSettings, setShowServerSettings] = useState(false);
+  const [pingStatus, setPingStatus] = useState(null);
+  const [isPinging, setIsPinging] = useState(false);
 
   // Registrations & Filters
   const [registrations, setRegistrations] = useState([]);
@@ -77,7 +86,20 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
     } catch (err) {
       setIsLoading(false);
       setIsAuthenticated(false);
-      setErrorMsg('Could not connect to backend server. Make sure the backend is running on http://127.0.0.1:8000.');
+      setErrorMsg('Could not connect to backend server. Make sure your Render backend service is awake and active.');
+    }
+  };
+
+  const handleTestConnection = async () => {
+    setIsPinging(true);
+    setPingStatus(null);
+    const res = await pingBackend(backendUrl);
+    setIsPinging(false);
+    if (res.ok) {
+      setCustomBackendUrl(backendUrl);
+      setPingStatus({ ok: true, message: 'Backend connected successfully!' });
+    } else {
+      setPingStatus({ ok: false, message: res.error || 'Connection failed' });
     }
   };
 
@@ -87,6 +109,9 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
     if (!cleanKey) {
       setErrorMsg('Please enter the Admin Key.');
       return;
+    }
+    if (backendUrl) {
+      setCustomBackendUrl(backendUrl);
     }
     setAdminKey(cleanKey);
     loadData(cleanKey);
@@ -207,8 +232,84 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                   </button>
                 </form>
 
-                <div className="text-muted small mt-3" style={{ fontSize: '0.75rem' }}>
+                <div className="text-muted small mt-2.5 mb-2" style={{ fontSize: '0.75rem' }}>
                   Default Access Key: <code>travelzync_admin_2026</code>
+                </div>
+
+                {/* Render / Custom Backend Connection Manager */}
+                <div className="mt-3 pt-2.5 border-top text-start">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <button
+                      type="button"
+                      className="btn btn-link p-0 text-muted small text-decoration-none d-flex align-items-center gap-1.5"
+                      onClick={() => setShowServerSettings(!showServerSettings)}
+                      style={{ fontSize: '0.78rem' }}
+                    >
+                      <span>⚙️ Backend Server URL</span>
+                      <span className="badge bg-light text-secondary border">
+                        {backendUrl ? 'Custom' : 'Auto'}
+                      </span>
+                    </button>
+                    {backendUrl && (
+                      <span className="text-success small" style={{ fontSize: '0.7rem' }}>
+                        Active
+                      </span>
+                    )}
+                  </div>
+
+                  {showServerSettings && (
+                    <div className="mt-2 p-2.5 rounded-3 bg-light border">
+                      <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '0.75rem' }}>
+                        Render Web Service URL:
+                      </label>
+                      <input
+                        type="url"
+                        className="form-control form-control-sm mb-2"
+                        placeholder="e.g. https://travelzync-backend.onrender.com"
+                        value={backendUrl}
+                        onChange={(e) => {
+                          setBackendUrl(e.target.value);
+                          setPingStatus(null);
+                        }}
+                      />
+                      <div className="d-flex align-items-center gap-2">
+                        <button
+                          type="button"
+                          className="btn btn-outline-dark btn-sm py-1 px-2.5"
+                          style={{ fontSize: '0.75rem' }}
+                          onClick={handleTestConnection}
+                          disabled={isPinging}
+                        >
+                          {isPinging ? 'Pinging...' : 'Test & Save URL'}
+                        </button>
+                        {backendUrl && (
+                          <button
+                            type="button"
+                            className="btn btn-link btn-sm p-0 text-danger text-decoration-none small"
+                            style={{ fontSize: '0.75rem' }}
+                            onClick={() => {
+                              setBackendUrl('');
+                              setCustomBackendUrl('');
+                              setPingStatus(null);
+                            }}
+                          >
+                            Reset to default
+                          </button>
+                        )}
+                      </div>
+
+                      {pingStatus && (
+                        <div
+                          className={`mt-2 p-1.5 rounded-2 small ${
+                            pingStatus.ok ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'
+                          }`}
+                          style={{ fontSize: '0.74rem' }}
+                        >
+                          {pingStatus.ok ? '✓ ' : '⚠️ '}{pingStatus.message}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
