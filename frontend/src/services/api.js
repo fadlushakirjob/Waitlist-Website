@@ -7,6 +7,10 @@ export function getBackendBase() {
   if (rawHost) {
     return rawHost.startsWith('http://') || rawHost.startsWith('https://') ? rawHost : `https://${rawHost}`;
   }
+  // Automatic fallback for Render deployment
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    return 'https://travelzync-backend.onrender.com';
+  }
   return '';
 }
 
