@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Menu, X, Lock } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 
 export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -139,7 +139,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
           </ul>
 
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center">
             <button
               className="btn btn-tz-primary"
               onClick={onOpenWaitlist}
@@ -149,20 +149,6 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
               <span>Join Waitlist</span>
               <ArrowRight size={15} />
             </button>
-
-            {onOpenAdmin && (
-              <button
-                type="button"
-                className="btn btn-outline-secondary d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill shadow-2xs"
-                onClick={onOpenAdmin}
-                id="nav-admin-login-btn"
-                title="Administrator Login Portal"
-                style={{ fontSize: '0.825rem' }}
-              >
-                <Lock size={13} />
-                <span className="fw-semibold">Admin Login</span>
-              </button>
-            )}
           </div>
         </div>
 
@@ -223,7 +209,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
           </ul>
           <button
-            className="btn btn-tz-primary w-100 py-2 justify-content-center mb-2"
+            className="btn btn-tz-primary w-100 py-2 justify-content-center"
             onClick={() => {
               setMobileMenuOpen(false);
               onOpenWaitlist();
@@ -232,20 +218,6 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             <span>Join Waitlist</span>
             <ArrowRight size={15} />
           </button>
-
-          {onOpenAdmin && (
-            <button
-              type="button"
-              className="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
-            >
-              <Lock size={15} />
-              <span>Admin Login</span>
-            </button>
-          )}
         </div>
       )}
     </nav>
