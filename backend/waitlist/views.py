@@ -255,3 +255,27 @@ class WaitlistAdminDeleteView(APIView):
             return Response({"success": True, "message": "Waitlist entry deleted successfully."})
         except WaitlistEntry.DoesNotExist:
             return Response({"error": "Entry not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class WaitlistAdminLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = str(request.data.get('username', '')).strip()
+        password = str(request.data.get('password', '') or request.data.get('admin_key', '')).strip()
+
+        expected = str(getattr(settings, 'ADMIN_DASHBOARD_KEY', 'travelzync_admin_2026')).strip()
+
+        if password and password == expected:
+            return Response({
+                "success": True,
+                "message": "Administrator authenticated successfully.",
+                "token": expected,
+                "username": username or "admin"
+            })
+        else:
+            return Response({
+                "success": False,
+                "error": "Access Denied: Invalid administrator password. Access restricted to authorized personnel."
+            }, status=status.HTTP_401_UNAUTHORIZED)
+

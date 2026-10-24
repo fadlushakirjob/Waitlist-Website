@@ -199,11 +199,11 @@ export default function Footer({
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white d-flex align-items-center gap-1"
               onClick={onOpenAdmin}
-              title="Team Admin Dashboard"
+              title="Administrator Login Portal"
               style={{ fontSize: '0.8rem' }}
             >
               <Lock size={12} />
-              <span>Admin Portal</span>
+              <span>Admin Login</span>
             </button>
           </div>
         </div>

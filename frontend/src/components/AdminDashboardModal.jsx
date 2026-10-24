@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   Lock,
+  User,
+  Eye,
+  EyeOff,
   Download,
   Search,
   Filter,
@@ -9,11 +12,14 @@ import {
   RefreshCw,
   ExternalLink,
   ShieldAlert,
+  ShieldCheck,
   Users,
   CheckCircle,
   Calendar,
+  LogOut,
 } from 'lucide-react';
 import {
+  adminLogin,
   getAdminRegistrations,
   getAdminExportCSVUrl,
   deleteAdminRegistration,
@@ -24,11 +30,11 @@ import {
 } from '../services/api';
 
 export default function AdminDashboardModal({ isOpen, onClose }) {
-  const [adminKey, setAdminKey] = useState(
-    localStorage.getItem('tz_admin_key') || ''
-  );
+  const [adminKey, setAdminKey] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [keyInput, setKeyInput] = useState('');
+  const [usernameInput, setUsernameInput] = useState('admin');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,14 +58,32 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
   }, []);
 
   useEffect(() => {
-    if (adminKey && isOpen) {
-      loadData(adminKey);
+    if (isOpen) {
+      // Check active session authentication
+      const sessionAuth = sessionStorage.getItem('tz_admin_session_auth') === 'true';
+      const storedKey = (sessionStorage.getItem('tz_admin_key') || '').trim();
+
+      if (sessionAuth && storedKey === 'travelzync_admin_2026') {
+        setAdminKey(storedKey);
+        setIsAuthenticated(true);
+        loadData(storedKey);
+      } else {
+        // Strict: Always require administrator login
+        setIsAuthenticated(false);
+        setAdminKey('');
+        setPasswordInput('');
+        setErrorMsg('');
+      }
     }
-  }, [adminKey, isOpen]);
+  }, [isOpen]);
 
   const loadData = async (key) => {
     const cleanKey = (key || '').trim();
-    if (!cleanKey) return;
+    if (!cleanKey || cleanKey !== 'travelzync_admin_2026') {
+      setIsAuthenticated(false);
+      setErrorMsg('Access Denied: Invalid administrator password. Access restricted.');
+      return;
+    }
 
     setIsLoading(true);
     setErrorMsg('');
@@ -78,10 +102,9 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
         setIsAuthenticated(true);
         setRegistrations(res.data.registrations || []);
         setTotalCount(res.data.total_count || 0);
-        localStorage.setItem('tz_admin_key', cleanKey);
       } else {
         setIsAuthenticated(false);
-        setErrorMsg(res.data?.error || res.data?.message || 'Invalid Admin Access Key. Expected: travelzync_admin_2026');
+        setErrorMsg(res.data?.error || res.data?.message || 'Access Denied: Invalid administrator credentials.');
       }
     } catch (err) {
       setIsLoading(false);
@@ -103,25 +126,67 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const cleanKey = (keyInput || '').trim();
-    if (!cleanKey) {
-      setErrorMsg('Please enter the Admin Key.');
+    const cleanPassword = (passwordInput || '').trim();
+    const cleanUsername = (usernameInput || '').trim() || 'admin';
+
+    if (!cleanPassword) {
+      setErrorMsg('Please enter your administrator password.');
       return;
     }
+
+    // STRICT USER REQUIREMENT:
+    // Without "travelzync_admin_2026" this password it SHOULD NOT lead to admin dashboard!
+    if (cleanPassword !== 'travelzync_admin_2026') {
+      setIsAuthenticated(false);
+      setAdminKey('');
+      sessionStorage.removeItem('tz_admin_key');
+      sessionStorage.removeItem('tz_admin_session_auth');
+      setErrorMsg('Access Denied: Invalid administrator password. Without the authorized password, access to the admin dashboard is prohibited.');
+      return;
+    }
+
     if (backendUrl) {
       setCustomBackendUrl(backendUrl);
     }
-    setAdminKey(cleanKey);
-    loadData(cleanKey);
+
+    setIsLoading(true);
+    setErrorMsg('');
+
+    try {
+      const loginRes = await adminLogin(cleanUsername, cleanPassword);
+
+      if (!loginRes.ok) {
+        setIsLoading(false);
+        setIsAuthenticated(false);
+        setErrorMsg(loginRes.data?.error || 'Authentication Failed: Invalid administrator credentials.');
+        return;
+      }
+
+      setAdminKey(cleanPassword);
+      setIsAuthenticated(true);
+      sessionStorage.setItem('tz_admin_key', cleanPassword);
+      sessionStorage.setItem('tz_admin_session_auth', 'true');
+      sessionStorage.setItem('tz_admin_username', cleanUsername);
+
+      await loadData(cleanPassword);
+    } catch (err) {
+      setIsLoading(false);
+      setIsAuthenticated(false);
+      setErrorMsg('Could not connect to backend server. Ensure backend is running.');
+    }
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem('tz_admin_key');
+    sessionStorage.removeItem('tz_admin_session_auth');
+    sessionStorage.removeItem('tz_admin_username');
     localStorage.removeItem('tz_admin_key');
     setAdminKey('');
     setIsAuthenticated(false);
-    setKeyInput('');
+    setPasswordInput('');
+    setErrorMsg('');
   };
 
   const handleDelete = async (id) => {
@@ -159,29 +224,45 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                 style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '7px' }}
               />
               <div>
-                <h5 className="modal-title fw-bold fs-6 mb-0">TravelZync Admin Management Portal</h5>
+                <h5 className="modal-title fw-bold fs-6 mb-0">
+                  {isAuthenticated ? 'TravelZync Admin Management Portal' : 'TravelZync Administrator Login'}
+                </h5>
                 <span className="text-white-50" style={{ fontSize: '0.75rem' }}>
-                  Waitlist Database & Commuter Registrations
+                  {isAuthenticated ? 'Waitlist Database & Commuter Registrations' : 'Authorized Personnel Sign In'}
                 </span>
               </div>
             </div>
 
             <div className="d-flex align-items-center gap-2">
               {isAuthenticated && (
-                <a
-                  href="http://127.0.0.1:8000/admin/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn btn-sm btn-outline-light d-flex align-items-center gap-1 rounded-pill"
-                >
-                  <ExternalLink size={13} />
-                  <span>Django Admin</span>
-                </a>
+                <>
+                  <a
+                    href="http://127.0.0.1:8000/admin/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-sm btn-outline-light d-flex align-items-center gap-1 rounded-pill"
+                    style={{ fontSize: '0.78rem' }}
+                  >
+                    <ExternalLink size={13} />
+                    <span>Django Admin</span>
+                  </a>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 rounded-pill px-2.5"
+                    style={{ fontSize: '0.78rem' }}
+                    onClick={handleLogout}
+                    title="Log Out of Admin Portal"
+                  >
+                    <LogOut size={13} />
+                    <span>Log Out</span>
+                  </button>
+                </>
               )}
               <button
                 type="button"
                 className="btn btn-outline-secondary btn-sm rounded-circle p-1 text-white border-0"
                 onClick={onClose}
+                title="Close modal"
               >
                 <X size={20} />
               </button>
@@ -192,48 +273,105 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
           <div className="modal-body p-4 bg-light" style={{ minHeight: '480px' }}>
             {!isAuthenticated ? (
               /* LOGIN SCREEN */
-              <div className="max-w-md mx-auto my-5 p-4 rounded-4 bg-white border shadow-sm text-center" style={{ maxWidth: '420px' }}>
-                <img
-                  src="/travelzync_logo_clean.png"
-                  alt="TravelZync"
-                  style={{ width: '64px', height: '64px', objectFit: 'contain', borderRadius: '12px', marginBottom: '1rem' }}
-                />
-                <h4 className="fw-bold text-dark mb-1">Authorized Staff Login</h4>
-                <p className="text-muted small mb-4">
-                  Enter your team security key to access waitlist records.
-                </p>
+              <div className="max-w-md mx-auto my-4 p-4 p-sm-5 rounded-4 bg-white border shadow-sm text-center" style={{ maxWidth: '440px' }}>
+                <div className="d-inline-flex p-3 rounded-circle bg-light border mb-3 shadow-2xs">
+                  <img
+                    src="/travelzync_logo_clean.png"
+                    alt="TravelZync"
+                    style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <span className="badge rounded-pill bg-danger-subtle text-danger px-3 py-1 fw-semibold small mb-2" style={{ fontSize: '0.72rem', letterSpacing: '0.05em' }}>
+                    RESTRICTED ADMIN ACCESS
+                  </span>
+                  <h4 className="fw-bold text-dark mb-1">Admin Portal Login</h4>
+                  <p className="text-muted small mb-0" style={{ fontSize: '0.825rem' }}>
+                    Enter administrator credentials to manage waitlist registrations.
+                  </p>
+                </div>
 
                 {errorMsg && (
-                  <div className="alert alert-danger py-2 px-3 small text-start mb-3">
-                    {errorMsg}
+                  <div className="alert alert-danger py-2.5 px-3 small text-start mb-3 d-flex align-items-start gap-2 rounded-3 border-danger-subtle">
+                    <ShieldAlert size={18} className="text-danger flex-shrink-0 mt-0.5" />
+                    <div style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>{errorMsg}</div>
                   </div>
                 )}
 
-                <form onSubmit={handleLogin}>
-                  <div className="mb-3 text-start">
-                    <label className="form-label small fw-semibold text-dark">
-                      Admin Security Key
+                <form onSubmit={handleLogin} className="text-start">
+                  <div className="mb-3">
+                    <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '0.8rem' }}>
+                      Administrator Username
                     </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Enter admin key (default: travelzync_admin_2026)"
-                      value={keyInput}
-                      onChange={(e) => setKeyInput(e.target.value)}
-                    />
+                    <div className="input-group">
+                      <span className="input-group-text bg-light text-muted border-end-0">
+                        <User size={16} />
+                      </span>
+                      <input
+                        type="text"
+                        className="form-control border-start-0 ps-1"
+                        placeholder="Admin username"
+                        value={usernameInput}
+                        onChange={(e) => setUsernameInput(e.target.value)}
+                        required
+                        autoFocus
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '0.8rem' }}>
+                      Admin Password
+                    </label>
+                    <div className="input-group">
+                      <span className="input-group-text bg-light text-muted border-end-0">
+                        <Lock size={16} />
+                      </span>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        className="form-control border-start-0 border-end-0 ps-1"
+                        placeholder="Enter administrator password"
+                        value={passwordInput}
+                        onChange={(e) => {
+                          setPasswordInput(e.target.value);
+                          if (errorMsg) setErrorMsg('');
+                        }}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary border-start-0"
+                        onClick={() => setShowPassword(!showPassword)}
+                        title={showPassword ? 'Hide password' : 'Show password'}
+                        tabIndex="-1"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="btn btn-tz-primary w-100 py-2 justify-content-center"
+                    className="btn btn-tz-primary w-100 py-2.5 justify-content-center fw-semibold d-flex align-items-center gap-2 mt-3 shadow-sm"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Verifying...' : 'Unlock Admin Dashboard'}
+                    {isLoading ? (
+                      <>
+                        <RefreshCw size={16} className="spin" />
+                        <span>Verifying Credentials...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck size={17} />
+                        <span>Sign In as Administrator</span>
+                      </>
+                    )}
                   </button>
                 </form>
 
-                <div className="text-muted small mt-2.5 mb-2" style={{ fontSize: '0.75rem' }}>
-                  Default Access Key: <code>travelzync_admin_2026</code>
+                <div className="text-muted small mt-3" style={{ fontSize: '0.74rem', lineHeight: 1.45 }}>
+                  🔒 Authorized personnel only. Without the authorized password, access to this dashboard is strictly prohibited.
                 </div>
 
                 {/* Render / Custom Backend Connection Manager */}
@@ -243,6 +381,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       type="button"
                       className="btn btn-link p-0 text-muted small text-decoration-none d-flex align-items-center gap-1.5"
                       onClick={() => setShowServerSettings(!showServerSettings)}
+
                       style={{ fontSize: '0.78rem' }}
                     >
                       <span>⚙️ Backend Server URL</span>

@@ -153,12 +153,14 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             {onOpenAdmin && (
               <button
                 type="button"
-                className="btn btn-outline-secondary rounded-circle p-0 d-inline-flex align-items-center justify-content-center shadow-2xs"
+                className="btn btn-outline-secondary d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill shadow-2xs"
                 onClick={onOpenAdmin}
-                title="Open Admin Portal"
-                style={{ width: '38px', height: '38px' }}
+                id="nav-admin-login-btn"
+                title="Administrator Login Portal"
+                style={{ fontSize: '0.825rem' }}
               >
-                <Lock size={15} />
+                <Lock size={13} />
+                <span className="fw-semibold">Admin Login</span>
               </button>
             )}
           </div>
@@ -241,7 +243,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
               }}
             >
               <Lock size={15} />
-              <span>Admin Portal</span>
+              <span>Admin Login</span>
             </button>
           )}
         </div>

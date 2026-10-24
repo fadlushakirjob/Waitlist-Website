@@ -158,9 +158,62 @@ export async function getKeralaDistricts() {
   }
 }
 
+export async function adminLogin(username, password) {
+  const cleanPassword = (password || '').trim();
+  const cleanUsername = (username || '').trim();
+
+  // Strict enforcement: without travelzync_admin_2026, it MUST NOT lead to admin dashboard
+  if (cleanPassword !== 'travelzync_admin_2026') {
+    return {
+      ok: false,
+      status: 401,
+      data: {
+        error: 'Access Denied: Invalid administrator password. Access is restricted to authorized personnel.',
+      },
+    };
+  }
+
+  try {
+    const response = await fetch(`${getApiBase()}/admin/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'X-Admin-Key': cleanPassword,
+      },
+      body: JSON.stringify({
+        username: cleanUsername || 'admin',
+        password: cleanPassword,
+      }),
+    });
+
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      const data = await response.json();
+      return { ok: response.ok, status: response.status, data };
+    }
+  } catch (err) {
+    // Fallback: If remote backend hasn't reloaded with /admin/login/, check registrations endpoint
+  }
+
+  return await getAdminRegistrations(cleanPassword);
+}
+
 export async function getAdminRegistrations(adminKey, filters = {}) {
   try {
     const cleanKey = (adminKey || '').trim();
+
+    // Strict security check: without travelzync_admin_2026, do not grant access
+    if (cleanKey !== 'travelzync_admin_2026') {
+      return {
+        ok: false,
+        status: 401,
+        data: {
+          error: 'Access Denied: Invalid administrator password. Access restricted.',
+        },
+      };
+    }
+
     const params = new URLSearchParams();
     params.append('admin_key', cleanKey);
     if (filters.search) params.append('search', filters.search);
@@ -205,6 +258,7 @@ export async function getAdminRegistrations(adminKey, filters = {}) {
     };
   }
 }
+
 
 export function getAdminExportCSVUrl(adminKey, filters = {}) {
   const cleanKey = (adminKey || '').trim();
