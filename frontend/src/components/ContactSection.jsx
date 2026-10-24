@@ -29,7 +29,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="section-padding bg-light position-relative">
+    <section id="contact" className="section-padding bg-light position-relative" style={{ scrollMarginTop: '85px' }}>
       <div className="tz-container">
         <div className="row gy-4 gx-lg-5 align-items-center">
           {/* Contact Details */}
@@ -50,50 +50,66 @@ export default function ContactSection() {
               bus operator interested in our free GPS integration kit, our team is ready to connect.
             </p>
 
-            <div className="d-flex flex-column gap-2.5">
-              <div className="d-flex align-items-center gap-3 p-3 rounded-3 bg-white border">
+            <div className="d-flex flex-column gap-3">
+              <div
+                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                style={{ borderColor: '#E5E7EB' }}
+              >
                 <div
-                  className="rounded-circle p-2 d-flex align-items-center justify-content-center text-white"
-                  style={{ backgroundColor: '#ED1C24', width: '34px', height: '34px' }}
+                  className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
+                  style={{ backgroundColor: '#ED1C24', width: '38px', height: '38px' }}
                 >
-                  <Mail size={16} />
+                  <Mail size={18} />
                 </div>
-                <div>
-                  <div className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>Official Email</div>
+                <div className="flex-grow-1">
+                  <div className="fw-bold text-dark small mb-0.5" style={{ fontSize: '0.85rem' }}>
+                    Official Email
+                  </div>
                   <a
                     href="mailto:contact@travelzync.com"
-                    className="text-decoration-none text-tz-red fw-bold small"
+                    className="text-decoration-none text-tz-red fw-bold small d-inline-block"
+                    style={{ fontSize: '0.85rem' }}
                   >
                     contact@travelzync.com
                   </a>
                 </div>
               </div>
 
-              <div className="d-flex align-items-center gap-3 p-3 rounded-3 bg-white border">
+              <div
+                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                style={{ borderColor: '#E5E7EB' }}
+              >
                 <div
-                  className="rounded-circle p-2 d-flex align-items-center justify-content-center text-white"
-                  style={{ backgroundColor: '#ED1C24', width: '34px', height: '34px' }}
+                  className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
+                  style={{ backgroundColor: '#ED1C24', width: '38px', height: '38px' }}
                 >
-                  <MapPin size={16} />
+                  <MapPin size={18} />
                 </div>
-                <div>
-                  <div className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>Headquarters</div>
-                  <div className="text-muted small" style={{ fontSize: '0.8rem' }}>
+                <div className="flex-grow-1">
+                  <div className="fw-bold text-dark small mb-0.5" style={{ fontSize: '0.85rem' }}>
+                    Headquarters
+                  </div>
+                  <div className="text-secondary small" style={{ fontSize: '0.82rem', lineHeight: 1.5 }}>
                     TravelZync Labs Private Limited • Calicut & Kochi, Kerala
                   </div>
                 </div>
               </div>
 
-              <div className="d-flex align-items-center gap-3 p-3 rounded-3 bg-white border">
+              <div
+                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                style={{ borderColor: '#E5E7EB' }}
+              >
                 <div
-                  className="rounded-circle p-2 d-flex align-items-center justify-content-center text-white"
-                  style={{ backgroundColor: '#ED1C24', width: '34px', height: '34px' }}
+                  className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
+                  style={{ backgroundColor: '#ED1C24', width: '38px', height: '38px' }}
                 >
-                  <Bus size={16} />
+                  <Bus size={18} />
                 </div>
-                <div>
-                  <div className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>Bus Operators Program</div>
-                  <div className="text-muted small" style={{ fontSize: '0.8rem' }}>
+                <div className="flex-grow-1">
+                  <div className="fw-bold text-dark small mb-0.5" style={{ fontSize: '0.85rem' }}>
+                    Bus Operators Program
+                  </div>
+                  <div className="text-secondary small" style={{ fontSize: '0.82rem', lineHeight: 1.5 }}>
                     Priority GPS telemetry hardware & digital ticketing setup.
                   </div>
                 </div>

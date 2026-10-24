@@ -73,7 +73,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
     <section
       id="features"
       className="section-padding bg-white position-relative"
-      style={{ borderBottom: '1px solid #F1F5F9' }}
+      style={{ borderBottom: '1px solid #F1F5F9', scrollMarginTop: '85px' }}
     >
       <div className="tz-container">
         {/* Section Header */}

@@ -30,7 +30,7 @@ export default function AboutSection({ onOpenWaitlist }) {
   ];
 
   return (
-    <section id="about" className="section-padding bg-white position-relative" style={{ borderBottom: '1px solid #F1F5F9' }}>
+    <section id="about" className="section-padding bg-white position-relative" style={{ borderBottom: '1px solid #F1F5F9', scrollMarginTop: '85px' }}>
       <div className="tz-container">
         <div className="row align-items-center gy-4 gx-lg-5">
           {/* Left: About Copy & Story */}
@@ -65,18 +65,45 @@ export default function AboutSection({ onOpenWaitlist }) {
             </p>
 
             {/* Core Pillars */}
-            <div className="d-flex flex-wrap gap-2.5 mb-4">
-              <div className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-light border">
-                <Target size={15} className="text-danger" />
-                <span className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>AI Route Intelligence</span>
+            <div className="row g-2.5 mb-4">
+              <div className="col-12 col-sm-4">
+                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
+                    style={{ width: '28px', height: '28px' }}
+                  >
+                    <Target size={14} className="text-tz-red" />
+                  </div>
+                  <span className="fw-bold text-dark" style={{ fontSize: '0.78rem', lineHeight: 1.3 }}>
+                    AI Route Intelligence
+                  </span>
+                </div>
               </div>
-              <div className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-light border">
-                <TrendingUp size={15} className="text-danger" />
-                <span className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>Digitizing 300+ Private Buses</span>
+              <div className="col-12 col-sm-4">
+                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
+                    style={{ width: '28px', height: '28px' }}
+                  >
+                    <TrendingUp size={14} className="text-tz-red" />
+                  </div>
+                  <span className="fw-bold text-dark" style={{ fontSize: '0.78rem', lineHeight: 1.3 }}>
+                    Digitizing 300+ Buses
+                  </span>
+                </div>
               </div>
-              <div className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-light border">
-                <MapPin size={15} className="text-danger" />
-                <span className="fw-semibold text-dark small" style={{ fontSize: '0.8rem' }}>Rooted in Kerala</span>
+              <div className="col-12 col-sm-4">
+                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
+                    style={{ width: '28px', height: '28px' }}
+                  >
+                    <MapPin size={14} className="text-tz-red" />
+                  </div>
+                  <span className="fw-bold text-dark" style={{ fontSize: '0.78rem', lineHeight: 1.3 }}>
+                    Rooted in Kerala
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -107,24 +134,37 @@ export default function AboutSection({ onOpenWaitlist }) {
                 </span>
               </div>
 
-              <div className="d-flex flex-column gap-2.5">
+              <div className="d-flex flex-column gap-3">
                 {painPoints.map((item, i) => (
                   <div
                     key={i}
-                    className="p-3 rounded-3 bg-white border shadow-2xs"
-                    style={{ borderColor: '#F1F5F9' }}
+                    className="p-3.5 rounded-3 bg-white border shadow-2xs"
+                    style={{ borderColor: '#E5E7EB' }}
                   >
-                    <div className="d-flex align-items-center gap-2 mb-1">
-                      <AlertCircle size={14} className="text-danger flex-shrink-0" />
-                      <span className="fw-bold text-dark small" style={{ fontSize: '0.825rem' }}>
+                    {/* Problem Row */}
+                    <div className="d-flex align-items-start gap-2.5 mb-2">
+                      <div
+                        className="rounded-circle d-flex align-items-center justify-content-center text-danger flex-shrink-0 mt-0.5"
+                        style={{ width: '22px', height: '22px', backgroundColor: '#FEE2E2' }}
+                      >
+                        <AlertCircle size={13} />
+                      </div>
+                      <div className="fw-bold text-dark" style={{ fontSize: '0.85rem', lineHeight: 1.4 }}>
                         {item.problem}
-                      </span>
+                      </div>
                     </div>
-                    <div className="d-flex align-items-start gap-2 ps-3.5">
-                      <CheckCircle size={13} className="text-success flex-shrink-0 mt-0.5" />
-                      <span className="text-muted small" style={{ fontSize: '0.775rem', lineHeight: 1.45 }}>
+
+                    {/* Solution Row */}
+                    <div className="d-flex align-items-start gap-2.5">
+                      <div
+                        className="rounded-circle d-flex align-items-center justify-content-center text-success flex-shrink-0 mt-0.5"
+                        style={{ width: '22px', height: '22px', backgroundColor: '#DCFCE7' }}
+                      >
+                        <CheckCircle size={13} />
+                      </div>
+                      <div className="text-secondary small" style={{ fontSize: '0.81rem', lineHeight: 1.5 }}>
                         {item.solution}
-                      </span>
+                      </div>
                     </div>
                   </div>
                 ))}
