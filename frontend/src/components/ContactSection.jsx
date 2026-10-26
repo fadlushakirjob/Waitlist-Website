@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Bus } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Bus, AlertCircle } from 'lucide-react';
 import { sendContactInquiry } from '../services/api';
 
 export default function ContactSection() {
@@ -11,20 +11,23 @@ export default function ContactSection() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSending(true);
+    setErrorMessage('');
 
     const res = await sendContactInquiry(formData);
     setIsSending(false);
 
     if (res.ok) {
       setSubmitted(true);
-      setTimeout(() => {
-        setFormData({ name: '', email: '', role: 'commuter', message: '' });
-        setSubmitted(false);
-      }, 5000);
+      setFormData({ name: '', email: '', role: 'commuter', message: '' });
+    } else {
+      setErrorMessage(
+        res.data?.message || 'Unable to deliver message right now. Please try again or email us directly at contact@travelzync.com.'
+      );
     }
   };
 
@@ -126,14 +129,35 @@ export default function ContactSection() {
               </p>
 
               {submitted ? (
-                <div className="alert alert-success d-flex align-items-center gap-2 py-3 px-3 rounded-3 small">
-                  <CheckCircle size={18} className="text-success flex-shrink-0" />
-                  <div>
-                    <strong>Message received!</strong> Thank you for reaching out to TravelZync Labs. An email notification has been dispatched.
+                <div className="alert alert-success py-3 px-3 rounded-3 small">
+                  <div className="d-flex align-items-center gap-2">
+                    <CheckCircle size={18} className="text-success flex-shrink-0" />
+                    <div>
+                      <strong>Message sent successfully!</strong> Thank you for reaching out to TravelZync Labs. An email notification has been dispatched.
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-2 border-top border-success-subtle d-flex justify-content-between align-items-center">
+                    <span className="text-muted" style={{ fontSize: '0.78rem' }}>
+                      We typically respond within 24 business hours.
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-link p-0 text-success fw-bold text-decoration-none"
+                      style={{ fontSize: '0.8rem' }}
+                      onClick={() => setSubmitted(false)}
+                    >
+                      Send another message &rarr;
+                    </button>
                   </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
+                  {errorMessage && (
+                    <div className="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 rounded-3 small mb-2.5">
+                      <AlertCircle size={16} className="text-danger flex-shrink-0 mt-0.5" />
+                      <div>{errorMessage}</div>
+                    </div>
+                  )}
                   <div className="row g-2.5 mb-2.5">
                     <div className="col-md-6">
                       <label className="form-label small fw-semibold text-dark mb-1">Your Name</label>

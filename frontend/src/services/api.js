@@ -90,6 +90,73 @@ export async function joinWaitlist(data) {
 }
 
 export async function sendContactInquiry(data) {
+  const WEB3FORMS_KEY =
+    (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '').trim() ||
+    '87d577f6-297e-41df-909c-9a192c099fc5';
+
+  const roleLabels = {
+    commuter: 'Regular Commuter / Passenger',
+    bus_operator: 'Private Bus Owner / Operator',
+    investor: 'Ecosystem Partner / Institutional',
+    media: 'Media & Press Inquiry',
+  };
+
+  const roleName = roleLabels[data.role] || data.role || 'Website Visitor';
+
+  // 1. Dispatch via Web3Forms HTTPS API
+  try {
+    const formData = new FormData();
+    formData.append('access_key', WEB3FORMS_KEY);
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('role', roleName);
+    formData.append('message', data.message);
+    formData.append('from_name', 'TravelZync Website');
+    formData.append('subject', `TravelZync Inquiry: ${data.name} (${roleName})`);
+    formData.append('replyto', data.email);
+
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok && (result.success || result.ok)) {
+      // Asynchronously log to Django backend if active (non-blocking)
+      try {
+        const apiBase = getApiBase();
+        if (apiBase) {
+          fetch(`${apiBase}/contact/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }).catch(() => {});
+        }
+      } catch (_) {}
+
+      return {
+        ok: true,
+        status: 200,
+        data: {
+          success: true,
+          message: result.message || 'Your message has been sent successfully.',
+        },
+      };
+    } else {
+      // If Web3Forms returned an error, attempt backend fallback
+      return await _sendContactInquiryBackendFallback(data, result.message);
+    }
+  } catch (err) {
+    // If network error talking to Web3Forms, attempt backend fallback
+    return await _sendContactInquiryBackendFallback(data, err.message);
+  }
+}
+
+async function _sendContactInquiryBackendFallback(data, initialError = '') {
   try {
     const response = await fetch(`${getApiBase()}/contact/`, {
       method: 'POST',
@@ -105,13 +172,13 @@ export async function sendContactInquiry(data) {
       status: response.status,
       data: result,
     };
-  } catch (err) {
+  } catch (backendErr) {
     return {
       ok: false,
       status: 500,
       data: {
         success: false,
-        message: 'Could not connect to server.',
+        message: initialError || 'Could not send message. Please check your connection or contact us at contact@travelzync.com.',
       },
     };
   }
