@@ -62,11 +62,6 @@ export async function pingBackend(customUrl = '') {
 }
 
 export async function joinWaitlist(data) {
-  const WEB3FORMS_KEY =
-    (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '').trim() ||
-    '87d577f6-297e-41df-909c-9a192c099fc5';
-
-  // 1. Attempt to register through Django backend if reachable
   try {
     const response = await fetch(`${getApiBase()}/join/`, {
       method: 'POST',
@@ -76,95 +71,21 @@ export async function joinWaitlist(data) {
       body: JSON.stringify(data),
     });
 
-    const contentType = response.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      const result = await response.json();
-      if (response.ok && result.success) {
-        // Also dispatch backup email notification via Web3Forms (fire-and-forget)
-        _notifyWaitlistWeb3Forms(data, result.queue_number, WEB3FORMS_KEY);
-        return {
-          ok: true,
-          status: response.status,
-          data: result,
-        };
-      }
-      // If backend returned a clear user error (e.g. email already registered)
-      if (result.message && !result.message.toLowerCase().includes('server')) {
-        return {
-          ok: false,
-          status: response.status,
-          data: result,
-        };
-      }
-    }
-  } catch (backendErr) {
-    // Backend offline / unreachable from phone / cold start
-  }
-
-  // 2. Resilient Web3Forms fallback: Guarantees waitlist submission works on phone & static hosts
-  try {
-    const queueNo = _getOrIncrementLocalQueue();
-    const web3Success = await _notifyWaitlistWeb3Forms(data, queueNo, WEB3FORMS_KEY);
-
-    if (web3Success) {
-      return {
-        ok: true,
-        status: 200,
-        data: {
-          success: true,
-          queue_number: queueNo,
-          message: 'Welcome to the TravelZync Waitlist! Your spot has been confirmed.',
-        },
-      };
-    }
+    const result = await response.json();
+    return {
+      ok: response.ok,
+      status: response.status,
+      data: result,
+    };
   } catch (err) {
-    // Web3Forms dispatch failed
-  }
-
-  return {
-    ok: false,
-    status: 500,
-    data: {
-      success: false,
-      message: 'Could not connect to server. Please check your internet connection.',
-    },
-  };
-}
-
-function _getOrIncrementLocalQueue() {
-  const base = 10429;
-  try {
-    const stored = parseInt(localStorage.getItem('tz_last_queue') || '0', 10);
-    const next = stored && stored >= base ? stored + 1 : base;
-    localStorage.setItem('tz_last_queue', next.toString());
-    return next;
-  } catch (_) {
-    return base;
-  }
-}
-
-async function _notifyWaitlistWeb3Forms(data, queueNo, key) {
-  try {
-    const formData = new FormData();
-    formData.append('access_key', key);
-    formData.append('name', data.full_name || 'Waitlist Subscriber');
-    formData.append('email', data.email);
-    formData.append('phone', data.phone_number || 'Not provided');
-    formData.append('district', data.district || 'Kerala');
-    formData.append('queue_number', `#${queueNo}`);
-    formData.append('from_name', 'TravelZync Waitlist Portal');
-    formData.append('subject', `🎉 New Waitlist Spot #${queueNo}: ${data.full_name || data.email} (${data.district || 'Kerala'})`);
-    formData.append('replyto', data.email);
-
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: formData,
-    });
-    const json = await res.json();
-    return res.ok && (json.success || json.ok);
-  } catch (_) {
-    return false;
+    return {
+      ok: false,
+      status: 500,
+      data: {
+        success: false,
+        message: 'Could not connect to server. Please check your internet connection.',
+      },
+    };
   }
 }
 
