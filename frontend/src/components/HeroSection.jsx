@@ -45,13 +45,13 @@ export default function HeroSection({ onQuickSubmit, stats }) {
               style={{
                 fontSize: 'clamp(1.95rem, 5vw, 3.25rem)',
                 lineHeight: 1.18,
-                color: '#111827',
+                color: 'var(--tz-dark)',
                 letterSpacing: '-0.75px',
                 fontWeight: 800,
               }}
             >
               A Smarter Way to <br />
-              <span style={{ color: '#111827' }}>Travel in </span>
+              <span style={{ color: 'var(--tz-dark)' }}>Travel in </span>
               <span style={{ color: '#ED1C24' }}>Kerala</span>
             </h1>
 
@@ -61,7 +61,7 @@ export default function HeroSection({ onQuickSubmit, stats }) {
               style={{
                 fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
                 lineHeight: 1.6,
-                color: '#4B5563',
+                color: 'var(--tz-text-secondary)',
                 maxWidth: '520px',
               }}
             >
@@ -173,7 +173,7 @@ export default function HeroSection({ onQuickSubmit, stats }) {
               <span
                 className="font-script fs-4 fw-bold"
                 style={{
-                  color: '#374151',
+                  color: 'var(--tz-text-muted)',
                   transform: 'rotate(-4deg)',
                   display: 'inline-block',
                 }}

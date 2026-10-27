@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme, isDark } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,12 +27,11 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
     <nav
       className={`navbar navbar-expand-lg fixed-top transition-all duration-200 ${
         isScrolled
-          ? 'bg-white shadow-sm py-2'
-          : 'bg-white py-2.5 py-md-3'
+          ? 'tz-navbar-scrolled py-2'
+          : 'tz-navbar-top py-2.5 py-md-3'
       }`}
       style={{
         zIndex: 1030,
-        borderBottom: '1px solid #f1f5f9',
         paddingTop: 'max(0.6rem, env(safe-area-inset-top))',
       }}
     >
@@ -56,9 +57,8 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
           />
           <div className="d-flex flex-column">
             <span
-              className="fw-extrabold lh-1"
+              className="fw-extrabold lh-1 tz-brand-text"
               style={{
-                color: '#111827',
                 letterSpacing: '-0.5px',
                 fontWeight: 800,
                 fontSize: 'clamp(1.2rem, 3.5vw, 1.45rem)',
@@ -67,20 +67,20 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
               Travel<span style={{ color: '#ED1C24', fontWeight: 800 }}>Zync</span>
             </span>
             <span
-              className="font-script fs-6 lh-1 mt-0.5 d-none d-sm-inline"
-              style={{ color: '#6B7280', fontWeight: 600 }}
+              className="font-script fs-6 lh-1 mt-0.5 d-none d-sm-inline tz-brand-tagline"
+              style={{ fontWeight: 600 }}
             >
               Your journey perfectly synced.
             </span>
           </div>
         </a>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Navigation Links & Controls */}
         <div className="d-none d-lg-flex align-items-center gap-4">
           <ul className="navbar-nav d-flex flex-row align-items-center gap-4 mb-0">
             <li className="nav-item">
               <a
-                className="nav-link p-0 fw-semibold text-dark hover-red"
+                className="nav-link p-0 fw-semibold tz-nav-link"
                 href="#home"
                 onClick={(e) => {
                   e.preventDefault();
@@ -93,7 +93,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <a
-                className="nav-link p-0 fw-semibold text-dark hover-red"
+                className="nav-link p-0 fw-semibold tz-nav-link"
                 href="#about"
                 onClick={(e) => {
                   e.preventDefault();
@@ -106,7 +106,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <a
-                className="nav-link p-0 fw-semibold text-dark hover-red"
+                className="nav-link p-0 fw-semibold tz-nav-link"
                 href="#features"
                 onClick={(e) => {
                   e.preventDefault();
@@ -119,7 +119,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <a
-                className="nav-link p-0 fw-semibold text-dark hover-red"
+                className="nav-link p-0 fw-semibold tz-nav-link"
                 href="#achievements"
                 onClick={(e) => {
                   e.preventDefault();
@@ -132,7 +132,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <a
-                className="nav-link p-0 fw-semibold text-dark hover-red"
+                className="nav-link p-0 fw-semibold tz-nav-link"
                 href="#contact"
                 onClick={(e) => {
                   e.preventDefault();
@@ -145,7 +145,24 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
           </ul>
 
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center gap-2.5">
+            {/* Theme Toggle Button (Desktop) */}
+            <button
+              type="button"
+              className="btn tz-theme-toggle-btn d-flex align-items-center justify-content-center p-2 rounded-circle"
+              onClick={toggleTheme}
+              aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              style={{ width: '38px', height: '38px' }}
+            >
+              {isDark ? (
+                <Sun size={18} className="text-warning" />
+              ) : (
+                <Moon size={18} className="text-secondary" />
+              )}
+            </button>
+
+            {/* Waitlist CTA */}
             <button
               className="btn btn-tz-primary"
               onClick={onOpenWaitlist}
@@ -158,22 +175,41 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
           </div>
         </div>
 
-        {/* Mobile Hamburger Button (Accessible Touch Target) */}
-        <button
-          className="navbar-toggler border-0 shadow-none d-lg-none d-inline-flex align-items-center justify-content-center p-2 rounded-3"
-          type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle navigation menu"
-          style={{ width: '42px', height: '42px' }}
-        >
-          {mobileMenuOpen ? <X size={24} color="#111827" /> : <Menu size={24} color="#111827" />}
-        </button>
+        {/* Mobile Header Right Controls: Theme Toggle & Hamburger */}
+        <div className="d-flex align-items-center gap-1.5 d-lg-none">
+          {/* Theme Toggle Button (Mobile Quick Access) */}
+          <button
+            type="button"
+            className="btn tz-theme-toggle-btn d-flex align-items-center justify-content-center p-2 rounded-3"
+            onClick={toggleTheme}
+            aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            style={{ width: '40px', height: '40px' }}
+          >
+            {isDark ? (
+              <Sun size={19} className="text-warning" />
+            ) : (
+              <Moon size={19} className="text-secondary" />
+            )}
+          </button>
+
+          {/* Mobile Hamburger Toggle Button */}
+          <button
+            className="navbar-toggler border-0 shadow-none d-inline-flex align-items-center justify-content-center p-2 rounded-3 tz-mobile-toggle-btn"
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            style={{ width: '42px', height: '42px' }}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div
-          className="d-lg-none w-100 bg-white border-top shadow-lg"
+          className="d-lg-none w-100 tz-mobile-dropdown border-top shadow-lg"
           style={{
             maxHeight: 'calc(100vh - 75px)',
             overflowY: 'auto',
@@ -183,8 +219,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
           <ul className="navbar-nav gap-2 mb-3">
             <li className="nav-item">
               <button
-                className="btn text-start py-2.5 px-3 fw-semibold text-dark w-100 rounded-3"
-                style={{ backgroundColor: '#F9FAFB' }}
+                className="btn text-start py-2.5 px-3 fw-semibold w-100 rounded-3 tz-mobile-link-btn"
                 onClick={() => scrollTo('home')}
               >
                 Home
@@ -192,8 +227,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <button
-                className="btn text-start py-2.5 px-3 fw-semibold text-dark w-100 rounded-3"
-                style={{ backgroundColor: '#F9FAFB' }}
+                className="btn text-start py-2.5 px-3 fw-semibold w-100 rounded-3 tz-mobile-link-btn"
                 onClick={() => scrollTo('about')}
               >
                 About
@@ -201,8 +235,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <button
-                className="btn text-start py-2.5 px-3 fw-semibold text-dark w-100 rounded-3"
-                style={{ backgroundColor: '#F9FAFB' }}
+                className="btn text-start py-2.5 px-3 fw-semibold w-100 rounded-3 tz-mobile-link-btn"
                 onClick={() => scrollTo('features')}
               >
                 Features
@@ -210,8 +243,7 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <button
-                className="btn text-start py-2.5 px-3 fw-semibold text-dark w-100 rounded-3"
-                style={{ backgroundColor: '#F9FAFB' }}
+                className="btn text-start py-2.5 px-3 fw-semibold w-100 rounded-3 tz-mobile-link-btn"
                 onClick={() => scrollTo('achievements')}
               >
                 Our Journey
@@ -219,14 +251,36 @@ export default function Navbar({ onOpenWaitlist, onOpenAdmin }) {
             </li>
             <li className="nav-item">
               <button
-                className="btn text-start py-2.5 px-3 fw-semibold text-dark w-100 rounded-3"
-                style={{ backgroundColor: '#F9FAFB' }}
+                className="btn text-start py-2.5 px-3 fw-semibold w-100 rounded-3 tz-mobile-link-btn"
                 onClick={() => scrollTo('contact')}
               >
                 Contact
               </button>
             </li>
           </ul>
+
+          {/* Theme Switch Row in Mobile Dropdown */}
+          <div className="pt-2.5 border-top d-flex align-items-center justify-content-between mb-3 tz-border-subtle">
+            <span className="small fw-semibold text-secondary">Display Theme</span>
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 py-1.5"
+              onClick={toggleTheme}
+            >
+              {isDark ? (
+                <>
+                  <Sun size={15} className="text-warning" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={15} />
+                  <span>Dark Mode</span>
+                </>
+              )}
+            </button>
+          </div>
+
           <button
             className="btn btn-tz-primary w-100 py-2.5 justify-content-center"
             onClick={() => {

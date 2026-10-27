@@ -193,7 +193,7 @@ export default function AchievementsSection() {
                 fontSize: 'clamp(0.925rem, 1.8vw, 1rem)',
                 maxWidth: '680px',
                 lineHeight: 1.6,
-                color: '#4B5563',
+                color: 'var(--tz-text-secondary)',
               }}
             >
               National institute honors, state transit consultations, and official transport ministry
@@ -353,7 +353,7 @@ export default function AchievementsSection() {
                       style={{
                         fontSize: '0.86rem',
                         lineHeight: 1.55,
-                        color: '#4B5563',
+                        color: 'var(--tz-text-secondary)',
                       }}
                     >
                       {item.summary}
@@ -609,7 +609,7 @@ export default function AchievementsSection() {
                           paragraph.startsWith('TravelZync Labs —')
                             ? 700
                             : 400,
-                        color: paragraph.startsWith('TravelZync Labs —') ? '#ED1C24' : '#374151',
+                        color: paragraph.startsWith('TravelZync Labs —') ? '#ED1C24' : 'var(--tz-text-secondary)',
                       }}
                     >
                       {paragraph}

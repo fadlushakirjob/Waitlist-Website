@@ -43,7 +43,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-vh-100 d-flex flex-column bg-white">
+    <div className="min-vh-100 d-flex flex-column tz-app-wrapper">
       {/* Navigation */}
       <Navbar
         onOpenWaitlist={handleOpenWaitlist}
