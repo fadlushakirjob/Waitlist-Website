@@ -36,6 +36,7 @@ export default function AchievementsSection() {
       impactArea: 'AI Mobility & Commute Innovation',
       status: 'Verified Award Winner',
       image: '/Best Startup Runner up- NIT- Calicut_p1_img1.jpeg',
+      modalImagePosition: 'center 35%',
       summary:
         'Honored as the Best Startup Runner-Up at National Institute of Technology Calicut for pioneering technology-driven solutions to public transportation challenges.',
       keyTakeaway: 'Academic and tech ecosystem validation for TravelZync’s real-time transit model.',
@@ -257,6 +258,7 @@ export default function AchievementsSection() {
                       src={item.image}
                       alt={item.title}
                       className="achievement-img"
+                      style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
                     />
 
                     {/* Gradient Overlay for Top Badges */}
@@ -475,7 +477,7 @@ export default function AchievementsSection() {
               {/* Photo Frame */}
               <div
                 className="position-relative bg-dark"
-                style={{ height: 'clamp(180px, 32vw, 260px)', overflow: 'hidden' }}
+                style={{ height: 'clamp(220px, 36vw, 340px)', overflow: 'hidden' }}
               >
                 <img
                   src={selectedAchievement.image}
@@ -483,7 +485,10 @@ export default function AchievementsSection() {
                   className="w-100 h-100"
                   style={{
                     objectFit: 'cover',
-                    objectPosition: 'center 35%',
+                    objectPosition:
+                      selectedAchievement.modalImagePosition ||
+                      selectedAchievement.imagePosition ||
+                      'center 35%',
                   }}
                 />
               </div>
