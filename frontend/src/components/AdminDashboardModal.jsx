@@ -39,7 +39,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Backend Connection Settings
-  const [backendUrl, setBackendUrl] = useState(getBackendBase() || '');
+  const [backendUrl, setBackendUrl] = useState(() => (localStorage.getItem('tz_backend_url') || ''));
   const [showServerSettings, setShowServerSettings] = useState(false);
   const [pingStatus, setPingStatus] = useState(null);
   const [isPinging, setIsPinging] = useState(false);
@@ -59,6 +59,19 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (isOpen) {
+      // Self-heal: If localStorage contained broken 'travelzync-backend' or default, clean it immediately
+      const rawStoredUrl = (localStorage.getItem('tz_backend_url') || '').trim();
+      if (
+        rawStoredUrl &&
+        (!rawStoredUrl.includes('.') ||
+          rawStoredUrl === 'travelzync-backend' ||
+          rawStoredUrl === 'https://travelzync-backend' ||
+          rawStoredUrl === 'http://travelzync-backend')
+      ) {
+        localStorage.removeItem('tz_backend_url');
+      }
+      setBackendUrl(localStorage.getItem('tz_backend_url') || '');
+
       // Check active session authentication
       const sessionAuth = sessionStorage.getItem('tz_admin_session_auth') === 'true';
       const storedKey = (sessionStorage.getItem('tz_admin_key') || '').trim();
@@ -116,10 +129,13 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
   const handleTestConnection = async () => {
     setIsPinging(true);
     setPingStatus(null);
-    const res = await pingBackend(backendUrl);
+    const targetUrl = (backendUrl && backendUrl.trim()) ? backendUrl.trim() : getBackendBase();
+    const res = await pingBackend(targetUrl);
     setIsPinging(false);
     if (res.ok) {
-      setCustomBackendUrl(backendUrl);
+      if (backendUrl && backendUrl.trim()) {
+        setCustomBackendUrl(backendUrl);
+      }
       setPingStatus({ ok: true, message: 'Backend connected successfully!' });
     } else {
       setPingStatus({ ok: false, message: res.error || 'Connection failed' });
@@ -145,8 +161,10 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
       return;
     }
 
-    if (backendUrl) {
+    if (backendUrl && backendUrl.trim()) {
       setCustomBackendUrl(backendUrl);
+    } else {
+      setCustomBackendUrl('');
     }
 
     setIsLoading(true);
@@ -400,7 +418,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       </label>
                       <input
                         type="url"
-                        className="form-control form-control-sm mb-2"
+                        className="form-control form-control-sm mb-1"
                         placeholder="e.g. https://travelzync-backend.onrender.com"
                         value={backendUrl}
                         onChange={(e) => {
@@ -408,6 +426,9 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                           setPingStatus(null);
                         }}
                       />
+                      <div className="small text-muted mb-2" style={{ fontSize: '0.72rem' }}>
+                        Default: <code>https://travelzync-backend.onrender.com</code> (Leave blank to use automatic default)
+                      </div>
                       <div className="d-flex align-items-center gap-2">
                         <button
                           type="button"

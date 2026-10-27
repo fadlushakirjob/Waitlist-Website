@@ -1,17 +1,53 @@
-const DEFAULT_PRODUCTION_BACKEND = 'https://travelzync-backend.onrender.com';
+export const DEFAULT_PRODUCTION_BACKEND = 'https://travelzync-backend.onrender.com';
+
+export function normalizeBackendUrl(url) {
+  if (!url) return '';
+  let clean = url.trim().replace(/\/+$/, '');
+  if (!clean) return '';
+
+  const withoutProto = clean.replace(/^https?:\/\//, '');
+
+  // Fix truncated Render service names (e.g. travelzync-backend or https://travelzync-backend)
+  if (withoutProto === 'travelzync-backend') {
+    return DEFAULT_PRODUCTION_BACKEND;
+  }
+
+  // If domain has no dot and isn't localhost/127, it's a Render service slug
+  if (!withoutProto.includes('.') && !withoutProto.startsWith('localhost') && !withoutProto.startsWith('127.0.0.1')) {
+    clean = `https://${withoutProto}.onrender.com`;
+    return clean;
+  }
+
+  if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
+    clean = `https://${clean}`;
+  }
+  return clean;
+}
 
 export function getBackendBase() {
   if (typeof window !== 'undefined') {
-    const custom = (localStorage.getItem('tz_backend_url') || '').trim().replace(/\/+$/, '');
+    let custom = (localStorage.getItem('tz_backend_url') || '').trim();
     if (custom) {
-      return custom.startsWith('http://') || custom.startsWith('https://') ? custom : `https://${custom}`;
+      const normalized = normalizeBackendUrl(custom);
+      // Auto self-heal: If localStorage contained broken 'travelzync-backend' or default, purge it
+      if (
+        normalized === DEFAULT_PRODUCTION_BACKEND ||
+        custom === 'travelzync-backend' ||
+        custom === 'https://travelzync-backend' ||
+        custom === 'http://travelzync-backend'
+      ) {
+        localStorage.removeItem('tz_backend_url');
+        return DEFAULT_PRODUCTION_BACKEND;
+      }
+      return normalized;
     }
   }
-  let rawHost = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+  let rawHost = (import.meta.env.VITE_API_BASE_URL || '').trim();
   if (rawHost) {
-    return rawHost.startsWith('http://') || rawHost.startsWith('https://') ? rawHost : `https://${rawHost}`;
+    const normalized = normalizeBackendUrl(rawHost);
+    if (normalized) return normalized;
   }
-  // Default to live backend so waitlist works seamlessly across mobile devices, Vercel, Render, local dev, etc.
+  // Default to live backend so waitlist and admin work seamlessly across mobile devices, Vercel, Render, local dev, etc.
   return DEFAULT_PRODUCTION_BACKEND;
 }
 
@@ -32,12 +68,14 @@ export function warmupBackend() {
 }
 
 export function setCustomBackendUrl(url) {
+  if (typeof window === 'undefined') return;
   if (url && url.trim()) {
-    let clean = url.trim().replace(/\/+$/, '');
-    if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
-      clean = `https://${clean}`;
+    let clean = normalizeBackendUrl(url);
+    if (!clean || clean === DEFAULT_PRODUCTION_BACKEND) {
+      localStorage.removeItem('tz_backend_url');
+    } else {
+      localStorage.setItem('tz_backend_url', clean);
     }
-    localStorage.setItem('tz_backend_url', clean);
   } else {
     localStorage.removeItem('tz_backend_url');
   }
@@ -45,10 +83,7 @@ export function setCustomBackendUrl(url) {
 
 export async function pingBackend(customUrl = '') {
   try {
-    let host = (customUrl || getBackendBase()).trim().replace(/\/+$/, '');
-    if (host && !host.startsWith('http://') && !host.startsWith('https://')) {
-      host = `https://${host}`;
-    }
+    let host = normalizeBackendUrl(customUrl || getBackendBase());
     const target = host ? `${host}/api/waitlist/stats/` : '/api/waitlist/stats/';
     const response = await fetch(target, {
       method: 'GET',
