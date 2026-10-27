@@ -5,8 +5,6 @@ import {
 import {
   LinkedInIcon,
   InstagramIcon,
-  YouTubeIcon,
-  XTwitterIcon,
 } from './SocialIcons';
 
 export default function Footer({
@@ -53,17 +51,7 @@ export default function Footer({
             {/* Social Icons */}
             <div className="d-flex gap-2">
               <a
-                href="https://linkedin.com/company/travelzync"
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
-                style={{ width: '34px', height: '34px' }}
-                title="LinkedIn"
-              >
-                <LinkedInIcon size={14} color="#ffffff" />
-              </a>
-              <a
-                href="https://instagram.com/travelzync"
+                href="https://www.instagram.com/travelzynclabs?cplk=dW01d3BybXNuNzlj"
                 target="_blank"
                 rel="noreferrer"
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
@@ -73,24 +61,14 @@ export default function Footer({
                 <InstagramIcon size={14} color="#ffffff" />
               </a>
               <a
-                href="https://youtube.com/@travelzync"
+                href="https://www.linkedin.com/company/travelzynclabs/"
                 target="_blank"
                 rel="noreferrer"
                 className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
                 style={{ width: '34px', height: '34px' }}
-                title="YouTube"
+                title="LinkedIn"
               >
-                <YouTubeIcon size={14} color="#ffffff" />
-              </a>
-              <a
-                href="https://x.com/travelzync"
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
-                style={{ width: '34px', height: '34px' }}
-                title="X (Twitter)"
-              >
-                <XTwitterIcon size={14} color="#ffffff" />
+                <LinkedInIcon size={14} color="#ffffff" />
               </a>
             </div>
           </div>

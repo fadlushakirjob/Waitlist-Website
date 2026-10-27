@@ -17,8 +17,6 @@ import {
 import {
   LinkedInIcon,
   InstagramIcon,
-  YouTubeIcon,
-  XTwitterIcon,
 } from './SocialIcons';
 
 export default function AchievementsSection() {
@@ -211,7 +209,7 @@ export default function AchievementsSection() {
             </span>
             <div className="d-flex align-items-center gap-1.5">
               <a
-                href="https://instagram.com/travelzync"
+                href="https://www.instagram.com/travelzynclabs?cplk=dW01d3BybXNuNzlj"
                 target="_blank"
                 rel="noreferrer"
                 className="achievement-social-btn achievement-social-instagram"
@@ -222,7 +220,7 @@ export default function AchievementsSection() {
               </a>
 
               <a
-                href="https://linkedin.com/company/travelzync"
+                href="https://www.linkedin.com/company/travelzynclabs/"
                 target="_blank"
                 rel="noreferrer"
                 className="achievement-social-btn achievement-social-linkedin"
@@ -230,28 +228,6 @@ export default function AchievementsSection() {
                 title="Connect with TravelZync on LinkedIn"
               >
                 <LinkedInIcon size={15} color="#ffffff" />
-              </a>
-
-              <a
-                href="https://youtube.com/@travelzync"
-                target="_blank"
-                rel="noreferrer"
-                className="achievement-social-btn achievement-social-youtube"
-                style={{ width: '32px', height: '32px' }}
-                title="Subscribe to TravelZync on YouTube"
-              >
-                <YouTubeIcon size={15} color="#ffffff" />
-              </a>
-
-              <a
-                href="https://x.com/travelzync"
-                target="_blank"
-                rel="noreferrer"
-                className="achievement-social-btn achievement-social-x"
-                style={{ width: '32px', height: '32px' }}
-                title="Follow TravelZync on X (Twitter)"
-              >
-                <XTwitterIcon size={14} color="#ffffff" />
               </a>
             </div>
           </div>
@@ -411,14 +387,14 @@ export default function AchievementsSection() {
               </h4>
               <p className="text-secondary small mb-0" style={{ maxWidth: '580px', lineHeight: 1.55 }}>
                 Join our community across Kerala as we onboard private bus operators, conduct live route tests,
-                and expand digital mobility. Follow <strong className="text-dark">@travelzync</strong> on all major platforms.
+                and expand digital mobility. Follow <strong className="text-dark">@travelzynclabs</strong> on social media.
               </p>
             </div>
 
             <div className="col-lg-5 text-lg-end">
               <div className="d-flex align-items-center justify-content-start justify-content-lg-end gap-2 flex-wrap">
                 <a
-                  href="https://instagram.com/travelzync"
+                  href="https://www.instagram.com/travelzynclabs?cplk=dW01d3BybXNuNzlj"
                   target="_blank"
                   rel="noreferrer"
                   className="achievement-social-btn achievement-social-instagram px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
@@ -429,7 +405,7 @@ export default function AchievementsSection() {
                 </a>
 
                 <a
-                  href="https://linkedin.com/company/travelzync"
+                  href="https://www.linkedin.com/company/travelzynclabs/"
                   target="_blank"
                   rel="noreferrer"
                   className="achievement-social-btn achievement-social-linkedin px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
@@ -437,28 +413,6 @@ export default function AchievementsSection() {
                 >
                   <LinkedInIcon size={16} color="#ffffff" />
                   <span>LinkedIn</span>
-                </a>
-
-                <a
-                  href="https://youtube.com/@travelzync"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="achievement-social-btn achievement-social-youtube px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
-                  title="Subscribe on YouTube"
-                >
-                  <YouTubeIcon size={16} color="#ffffff" />
-                  <span>YouTube</span>
-                </a>
-
-                <a
-                  href="https://x.com/travelzync"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="achievement-social-btn achievement-social-x px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
-                  title="Follow on X"
-                >
-                  <XTwitterIcon size={15} color="#ffffff" />
-                  <span>X</span>
                 </a>
               </div>
             </div>
