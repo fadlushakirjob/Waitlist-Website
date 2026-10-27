@@ -155,10 +155,10 @@ export default function AchievementsSection() {
   return (
     <section
       id="achievements"
-      className="section-padding bg-white position-relative"
+      className="section-padding position-relative"
       style={{
-        borderBottom: '1px solid #F1F5F9',
-        backgroundColor: '#FAFAFB',
+        borderBottom: '1px solid var(--tz-border)',
+        backgroundColor: 'var(--tz-bg-subtle)',
         scrollMarginTop: '85px',
       }}
     >
@@ -204,7 +204,7 @@ export default function AchievementsSection() {
           {/* QUICK SOCIAL CONNECT PILL */}
           <div
             className="d-inline-flex align-items-center gap-2 p-1.5 px-3 rounded-pill bg-white border shadow-2xs"
-            style={{ borderColor: '#E5E7EB' }}
+            style={{ borderColor: 'var(--tz-border)' }}
           >
             <span className="small text-muted fw-semibold me-1" style={{ fontSize: '0.8rem' }}>
               Follow Us:
@@ -361,15 +361,14 @@ export default function AchievementsSection() {
 
                     {/* Key takeaway callout */}
                     <div
-                      className="p-2.5 px-3 rounded-3 mb-3"
+                      className="p-2.5 px-3 rounded-3 mb-3 achievement-takeaway"
                       style={{
-                        backgroundColor: '#F3F4F6',
                         borderLeft: '3px solid #ED1C24',
                       }}
                     >
                       <div
-                        className="fw-semibold text-dark lh-base"
-                        style={{ fontSize: '0.78rem' }}
+                        className="fw-semibold lh-base"
+                        style={{ fontSize: '0.78rem', color: 'var(--tz-dark)' }}
                       >
                         ⚡ {item.keyTakeaway}
                       </div>
@@ -397,16 +396,12 @@ export default function AchievementsSection() {
 
         {/* COMMUNITY BAR */}
         <div
-          className="p-3 p-sm-4 rounded-4 border bg-white shadow-sm mt-2 position-relative overflow-hidden"
-          style={{
-            borderColor: '#E5E7EB',
-            background: 'linear-gradient(135deg, #ffffff 0%, #FAFAFB 100%)',
-          }}
+          className="p-3 p-sm-4 rounded-4 border shadow-sm mt-2 position-relative overflow-hidden community-bar"
         >
           <div className="row align-items-center gy-3">
             <div className="col-lg-7">
               <div className="d-flex align-items-center gap-2 mb-1">
-                <span className="badge bg-dark text-white rounded-pill px-2.5 py-0.5 small fw-bold" style={{ fontSize: '0.7rem' }}>
+                <span className="badge community-badge rounded-pill px-2.5 py-0.5 small fw-bold" style={{ fontSize: '0.7rem' }}>
                   COMMUNITY & UPDATES
                 </span>
                 <span className="text-muted small">Kerala Transit Innovation</span>

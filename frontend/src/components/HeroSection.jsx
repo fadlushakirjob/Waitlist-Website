@@ -73,7 +73,7 @@ export default function HeroSection({ onQuickSubmit, stats }) {
             <form onSubmit={handleSubmit} className="mb-2" style={{ maxWidth: '480px' }}>
               <div
                 className="d-flex align-items-center p-1.5 rounded-pill bg-white border shadow-sm"
-                style={{ borderColor: '#E5E7EB' }}
+                style={{ borderColor: 'var(--tz-border)' }}
               >
                 <div
                   className="d-flex align-items-center flex-grow-1 ps-2 ps-sm-3"
@@ -191,7 +191,7 @@ export default function HeroSection({ onQuickSubmit, stats }) {
                 backgroundImage: 'url(/kerala_scenic_backdrop.jpg)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                border: '1px solid #E5E7EB',
+                border: '1px solid var(--tz-border)',
               }}
             >
               {/* Soft overlay */}
@@ -244,7 +244,7 @@ export default function HeroSection({ onQuickSubmit, stats }) {
         {/* FULL-WIDTH STATS ROW (Responsive 2x2 on mobile, 1x4 on desktop with clean dividers) */}
         <div
           className="mt-3 p-1 p-sm-2 rounded-4 bg-white border shadow-xs overflow-hidden"
-          style={{ borderColor: '#E5E7EB' }}
+          style={{ borderColor: 'var(--tz-border)' }}
         >
           <div className="row g-0 align-items-center text-center">
             {/* Stat 1 */}

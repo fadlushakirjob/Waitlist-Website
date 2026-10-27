@@ -73,7 +73,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
     <section
       id="features"
       className="section-padding bg-white position-relative"
-      style={{ borderBottom: '1px solid #F1F5F9', scrollMarginTop: '85px' }}
+      style={{ borderBottom: '1px solid var(--tz-border)', scrollMarginTop: '85px' }}
     >
       <div className="tz-container">
         {/* Section Header */}
@@ -106,7 +106,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
               <div
                 className="tz-card h-100 p-3.5 p-sm-4 d-flex flex-column justify-content-between"
                 style={{
-                  border: '1px solid #E5E7EB',
+                  border: '1px solid var(--tz-border)',
                 }}
               >
                 <div>

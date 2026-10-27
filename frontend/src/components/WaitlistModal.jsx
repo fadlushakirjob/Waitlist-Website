@@ -337,7 +337,7 @@ export default function WaitlistModal({
               {/* Queue Position Box */}
               <div
                 className="p-3 p-sm-4 rounded-4 bg-light border mb-3 position-relative overflow-hidden"
-                style={{ borderColor: '#E5E7EB' }}
+                style={{ borderColor: 'var(--tz-border)' }}
               >
                 <span className="text-muted small text-uppercase tracking-wider fw-semibold" style={{ fontSize: '0.72rem' }}>
                   Assigned Queue Position

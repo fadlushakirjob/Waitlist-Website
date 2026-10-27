@@ -30,7 +30,7 @@ export default function AboutSection({ onOpenWaitlist }) {
   ];
 
   return (
-    <section id="about" className="section-padding bg-white position-relative" style={{ borderBottom: '1px solid #F1F5F9', scrollMarginTop: '85px' }}>
+    <section id="about" className="section-padding bg-white position-relative" style={{ borderBottom: '1px solid var(--tz-border)', scrollMarginTop: '85px' }}>
       <div className="tz-container">
         <div className="row align-items-center gy-4 gx-lg-5">
           {/* Left: About Copy & Story */}
@@ -121,11 +121,7 @@ export default function AboutSection({ onOpenWaitlist }) {
           {/* Right: The Transformation Matrix Card */}
           <div className="col-lg-6">
             <div
-              className="p-3 p-sm-4 rounded-4 border shadow-xs position-relative overflow-hidden"
-              style={{
-                background: '#FAFAFA',
-                borderColor: '#E5E7EB',
-              }}
+              className="p-3 p-sm-4 rounded-4 border shadow-xs position-relative overflow-hidden about-matrix-card"
             >
               <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
                 <h5 className="fw-bold fs-6 text-dark mb-0">The Problem & Our Solution</h5>
@@ -139,13 +135,13 @@ export default function AboutSection({ onOpenWaitlist }) {
                   <div
                     key={i}
                     className="p-3 rounded-3 bg-white border shadow-2xs"
-                    style={{ borderColor: '#E5E7EB' }}
+                    style={{ borderColor: 'var(--tz-border)' }}
                   >
                     {/* Problem Row */}
                     <div className="d-flex align-items-start gap-2.5 mb-2">
                       <div
-                        className="rounded-circle d-flex align-items-center justify-content-center text-danger flex-shrink-0 mt-0.5"
-                        style={{ width: '22px', height: '22px', backgroundColor: '#FEE2E2' }}
+                        className="rounded-circle d-flex align-items-center justify-content-center text-danger flex-shrink-0 mt-0.5 icon-badge-danger"
+                        style={{ width: '22px', height: '22px' }}
                       >
                         <AlertCircle size={13} />
                       </div>
@@ -157,8 +153,8 @@ export default function AboutSection({ onOpenWaitlist }) {
                     {/* Solution Row */}
                     <div className="d-flex align-items-start gap-2.5">
                       <div
-                        className="rounded-circle d-flex align-items-center justify-content-center text-success flex-shrink-0 mt-0.5"
-                        style={{ width: '22px', height: '22px', backgroundColor: '#DCFCE7' }}
+                        className="rounded-circle d-flex align-items-center justify-content-center text-success flex-shrink-0 mt-0.5 icon-badge-success"
+                        style={{ width: '22px', height: '22px' }}
                       >
                         <CheckCircle size={13} />
                       </div>

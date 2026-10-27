@@ -513,6 +513,39 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+/* Achievement Takeaway Callout */
+.achievement-takeaway {
+  background-color: var(--tz-card-bg-elevated);
+  transition: background-color 0.25s ease;
+}
+
+/* Community & Updates Banner */
+.community-bar {
+  background: linear-gradient(135deg, #ffffff 0%, #FAFAFB 100%);
+  border-color: var(--tz-border) !important;
+  transition: background 0.25s ease;
+}
+
+.community-badge {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+/* About Transformation Matrix */
+.about-matrix-card {
+  background-color: var(--tz-bg-subtle) !important;
+  border-color: var(--tz-border) !important;
+  transition: background-color 0.25s ease;
+}
+
+.icon-badge-danger {
+  background-color: #FEE2E2;
+}
+
+.icon-badge-success {
+  background-color: #DCFCE7;
+}
+
 /* Dark Mode Overrides for Core Elements */
 [data-bs-theme="dark"],
 [data-theme="dark"] {
@@ -567,6 +600,64 @@ body {
     background-color: var(--tz-card-bg-elevated) !important;
     border-color: var(--tz-border) !important;
     color: var(--tz-text-muted) !important;
+  }
+
+  /* Community Banner in Dark Mode */
+  .community-bar {
+    background: linear-gradient(135deg, #121B32 0%, #0E162A 100%) !important;
+    border-color: var(--tz-border) !important;
+  }
+
+  .community-badge {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  }
+
+  .achievement-social-x {
+    background: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Icon Badges in Dark Mode */
+  .icon-badge-danger {
+    background-color: rgba(239, 68, 68, 0.22) !important;
+  }
+
+  .icon-badge-success {
+    background-color: rgba(34, 197, 94, 0.22) !important;
+  }
+
+  /* Button Light in Dark Mode */
+  .btn-light {
+    background-color: var(--tz-card-bg-elevated) !important;
+    border-color: var(--tz-border) !important;
+    color: var(--tz-text) !important;
+  }
+
+  .btn-light:hover {
+    background-color: var(--tz-border) !important;
+    color: #ffffff !important;
+  }
+
+  /* Light Badges in Dark Mode */
+  .badge.bg-light {
+    background-color: var(--tz-card-bg-elevated) !important;
+    color: var(--tz-text) !important;
+    border-color: var(--tz-border) !important;
+  }
+
+  /* Alerts High-Readability in Dark Mode */
+  .alert-success {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    color: #6ee7b7 !important;
+  }
+
+  .alert-danger {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #fca5a5 !important;
   }
 
   /* Modals */

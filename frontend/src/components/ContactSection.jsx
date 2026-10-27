@@ -56,7 +56,7 @@ export default function ContactSection() {
             <div className="d-flex flex-column gap-2.5">
               <div
                 className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
-                style={{ borderColor: '#E5E7EB' }}
+                style={{ borderColor: 'var(--tz-border)' }}
               >
                 <div
                   className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
@@ -80,7 +80,7 @@ export default function ContactSection() {
 
               <div
                 className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
-                style={{ borderColor: '#E5E7EB' }}
+                style={{ borderColor: 'var(--tz-border)' }}
               >
                 <div
                   className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
@@ -100,7 +100,7 @@ export default function ContactSection() {
 
               <div
                 className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
-                style={{ borderColor: '#E5E7EB' }}
+                style={{ borderColor: 'var(--tz-border)' }}
               >
                 <div
                   className="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0 mt-0.5 shadow-sm"
