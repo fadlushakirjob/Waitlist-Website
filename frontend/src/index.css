@@ -63,6 +63,27 @@
 .gap-2\.5 { gap: 0.75rem !important; }
 .g-2\.5 { --bs-gutter-x: 0.75rem; --bs-gutter-y: 0.75rem; }
 
+/* Responsive Width Utilities */
+@media (min-width: 576px) {
+  .w-sm-auto { width: auto !important; }
+  .w-sm-100 { width: 100% !important; }
+}
+
+@media (min-width: 768px) {
+  .w-md-auto { width: auto !important; }
+  .w-md-100 { width: 100% !important; }
+}
+
+@media (min-width: 992px) {
+  .w-lg-auto { width: auto !important; }
+  .w-lg-100 { width: 100% !important; }
+}
+
+@media (min-width: 1200px) {
+  .w-xl-auto { width: auto !important; }
+  .w-xl-100 { width: 100% !important; }
+}
+
 *,
 *::before,
 *::after {

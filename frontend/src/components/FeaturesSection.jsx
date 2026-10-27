@@ -191,7 +191,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
             </p>
           </div>
           <button
-            className="btn btn-tz-primary px-4 py-2.5 flex-shrink-0 w-100 w-md-auto"
+            className="btn btn-tz-primary px-4 py-2.5 flex-shrink-0 w-100 w-md-auto text-nowrap"
             onClick={onOpenWaitlist}
             id="features-join-waitlist-btn"
           >
