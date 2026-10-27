@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import WaitlistModal from './components/WaitlistModal';
 import AdminDashboardModal from './components/AdminDashboardModal';
 import PolicyModals from './components/PolicyModals';
-import { getWaitlistStats } from './services/api';
+import { getWaitlistStats, warmupBackend } from './services/api';
 
 export default function App() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
@@ -20,6 +20,7 @@ export default function App() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
+    warmupBackend();
     loadStats();
   }, []);
 

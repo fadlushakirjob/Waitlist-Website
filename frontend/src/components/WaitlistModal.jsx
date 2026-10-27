@@ -303,7 +303,10 @@ export default function WaitlistModal({
                   id="modal-submit-waitlist-btn"
                 >
                   {isLoading ? (
-                    <span className="spinner-border spinner-border-sm me-2" role="status" />
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                      <span className="spinner-border spinner-border-sm" role="status" />
+                      <span>Reserving Your Spot...</span>
+                    </div>
                   ) : (
                     <>
                       <span>Reserve My Spot</span>
