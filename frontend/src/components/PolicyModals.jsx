@@ -18,11 +18,11 @@ export default function PolicyModals({
           onClick={onClosePrivacy}
         >
           <div
-            className="modal-dialog modal-dialog-centered modal-lg"
+            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
-              <div className="modal-header bg-light border-bottom px-4 py-3 d-flex justify-content-between align-items-center">
+              <div className="modal-header bg-light border-bottom px-3 px-sm-4 py-3 d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                   <ShieldCheck size={20} className="text-tz-red" />
                   <h5 className="modal-title fw-bold fs-6 mb-0 text-dark">
@@ -33,14 +33,15 @@ export default function PolicyModals({
                   type="button"
                   className="btn btn-outline-secondary btn-sm rounded-circle p-1"
                   onClick={onClosePrivacy}
+                  aria-label="Close"
                 >
                   <X size={18} />
                 </button>
               </div>
 
               <div
-                className="modal-body p-4 text-secondary"
-                style={{ maxHeight: '65vh', overflowY: 'auto', fontSize: '0.9rem', lineHeight: 1.6 }}
+                className="modal-body p-3 p-sm-4 text-secondary"
+                style={{ fontSize: '0.9rem', lineHeight: 1.6 }}
               >
                 <p className="text-muted small">
                   <strong>Effective Date:</strong> October 2026 | TravelZync Labs Private Limited
@@ -90,7 +91,7 @@ export default function PolicyModals({
                 </p>
               </div>
 
-              <div className="modal-footer bg-light px-4 py-2.5">
+              <div className="modal-footer bg-light px-3 px-sm-4 py-2.5">
                 <button
                   type="button"
                   className="btn btn-dark rounded-pill px-4 btn-sm"
@@ -113,11 +114,11 @@ export default function PolicyModals({
           onClick={onCloseTerms}
         >
           <div
-            className="modal-dialog modal-dialog-centered modal-lg"
+            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
-              <div className="modal-header bg-light border-bottom px-4 py-3 d-flex justify-content-between align-items-center">
+              <div className="modal-header bg-light border-bottom px-3 px-sm-4 py-3 d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                   <FileText size={20} className="text-tz-red" />
                   <h5 className="modal-title fw-bold fs-6 mb-0 text-dark">
@@ -128,14 +129,15 @@ export default function PolicyModals({
                   type="button"
                   className="btn btn-outline-secondary btn-sm rounded-circle p-1"
                   onClick={onCloseTerms}
+                  aria-label="Close"
                 >
                   <X size={18} />
                 </button>
               </div>
 
               <div
-                className="modal-body p-4 text-secondary"
-                style={{ maxHeight: '65vh', overflowY: 'auto', fontSize: '0.9rem', lineHeight: 1.6 }}
+                className="modal-body p-3 p-sm-4 text-secondary"
+                style={{ fontSize: '0.9rem', lineHeight: 1.6 }}
               >
                 <p className="text-muted small">
                   <strong>Effective Date:</strong> October 2026 | TravelZync Labs Private Limited
@@ -168,7 +170,7 @@ export default function PolicyModals({
                 </p>
               </div>
 
-              <div className="modal-footer bg-light px-4 py-2.5">
+              <div className="modal-footer bg-light px-3 px-sm-4 py-2.5">
                 <button
                   type="button"
                   className="btn btn-dark rounded-pill px-4 btn-sm"

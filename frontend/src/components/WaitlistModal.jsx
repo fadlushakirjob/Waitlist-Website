@@ -118,44 +118,45 @@ export default function WaitlistModal({
       onClick={onClose}
     >
       <div
-        className="modal-dialog modal-dialog-centered"
-        style={{ maxWidth: '520px' }}
+        className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+        style={{ maxWidth: '500px' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden position-relative">
           {/* Close Button */}
           <button
             type="button"
-            className="btn btn-light rounded-circle position-absolute top-3 end-3 p-1 d-flex align-items-center justify-content-center shadow-sm"
-            style={{ top: '16px', right: '16px', width: '32px', height: '32px', zIndex: 10 }}
+            className="btn btn-light rounded-circle position-absolute top-3 end-3 p-1.5 d-flex align-items-center justify-content-center shadow-sm"
+            style={{ top: '12px', right: '12px', width: '36px', height: '36px', zIndex: 10 }}
             onClick={onClose}
+            aria-label="Close dialog"
           >
             <X size={18} />
           </button>
 
           {!successResult ? (
             /* WAITLIST SIGNUP FORM */
-            <div className="p-4 p-md-5">
+            <div className="p-3 p-sm-4 p-md-5">
               {/* Header with Official Logo */}
-              <div className="text-center mb-4">
+              <div className="text-center mb-3 mb-sm-4">
                 <div
                   className="rounded-3 mx-auto p-1 d-flex align-items-center justify-content-center mb-2 shadow-sm"
                   style={{
                     backgroundColor: '#fff',
-                    width: '64px',
-                    height: '64px',
+                    width: '58px',
+                    height: '58px',
                   }}
                 >
                   <img
                     src="/travelzync_logo_clean.png"
                     alt="TravelZync Official Logo"
-                    style={{ width: '56px', height: '56px', objectFit: 'contain', borderRadius: '10px' }}
+                    style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '10px' }}
                   />
                 </div>
-                <h3 className="fw-extrabold text-dark mb-1" style={{ fontSize: '1.45rem' }}>
+                <h3 className="fw-extrabold text-dark mb-1" style={{ fontSize: '1.35rem' }}>
                   Join the TravelZync Waitlist
                 </h3>
-                <p className="text-muted small mb-0" style={{ fontSize: '0.875rem' }}>
+                <p className="text-muted small mb-0" style={{ fontSize: '0.85rem' }}>
                   Be the first to experience live bus tracking, digital ticketing, and AI travel in Kerala.
                 </p>
               </div>
@@ -180,12 +181,12 @@ export default function WaitlistModal({
                 />
 
                 {/* Email (Required) */}
-                <div className="mb-3">
+                <div className="mb-2.5">
                   <label className="form-label small fw-semibold text-dark mb-1">
                     Email Address <span className="text-danger">*</span>
                   </label>
                   <div className="input-group">
-                    <span className="input-group-text bg-light border-end-0 text-muted">
+                    <span className="input-group-text bg-light border-end-0 text-muted px-2.5">
                       <Mail size={16} />
                     </span>
                     <input
@@ -201,12 +202,12 @@ export default function WaitlistModal({
                 </div>
 
                 {/* Full Name (Optional) */}
-                <div className="mb-3">
+                <div className="mb-2.5">
                   <label className="form-label small fw-semibold text-dark mb-1">
                     Full Name <span className="text-muted fw-normal">(Optional)</span>
                   </label>
                   <div className="input-group">
-                    <span className="input-group-text bg-light border-end-0 text-muted">
+                    <span className="input-group-text bg-light border-end-0 text-muted px-2.5">
                       <User size={16} />
                     </span>
                     <input
@@ -221,12 +222,12 @@ export default function WaitlistModal({
                 </div>
 
                 {/* Mobile Number (Optional) */}
-                <div className="mb-3">
+                <div className="mb-2.5">
                   <label className="form-label small fw-semibold text-dark mb-1">
                     Mobile Number <span className="text-muted fw-normal">(Optional for SMS alerts)</span>
                   </label>
                   <div className="input-group">
-                    <span className="input-group-text bg-light border-end-0 text-muted">
+                    <span className="input-group-text bg-light border-end-0 text-muted px-2.5">
                       <Phone size={16} />
                     </span>
                     <input
@@ -246,7 +247,7 @@ export default function WaitlistModal({
                     Preferred District in Kerala <span className="text-muted fw-normal">(Optional)</span>
                   </label>
                   <div className="input-group">
-                    <span className="input-group-text bg-light border-end-0 text-muted">
+                    <span className="input-group-text bg-light border-end-0 text-muted px-2.5">
                       <MapPin size={16} />
                     </span>
                     <select
@@ -266,7 +267,7 @@ export default function WaitlistModal({
                 </div>
 
                 {/* Consent Checkbox */}
-                <div className="form-check mb-4">
+                <div className="form-check mb-3.5">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -298,7 +299,7 @@ export default function WaitlistModal({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="btn btn-tz-primary w-100 py-2.5 justify-content-center"
+                  className="btn btn-tz-primary w-100 py-2.5 justify-content-center fw-bold"
                   id="modal-submit-waitlist-btn"
                 >
                   {isLoading ? (
@@ -314,49 +315,49 @@ export default function WaitlistModal({
             </div>
           ) : (
             /* SUCCESS CONFIRMATION SCREEN */
-            <div className="p-4 p-md-5 text-center">
+            <div className="p-3 p-sm-4 p-md-5 text-center">
               <div
-                className="rounded-circle mx-auto p-3 d-flex align-items-center justify-content-center mb-3 shadow-md"
-                style={{ backgroundColor: '#DCFCE7', width: '70px', height: '70px' }}
+                className="rounded-circle mx-auto p-3 d-flex align-items-center justify-content-center mb-2.5 shadow-md"
+                style={{ backgroundColor: '#DCFCE7', width: '64px', height: '64px' }}
               >
-                <CheckCircle size={38} className="text-success" />
+                <CheckCircle size={34} className="text-success" />
               </div>
 
               <div className="badge bg-danger rounded-pill px-3 py-1 mb-2">
                 SPOT CONFIRMED
               </div>
 
-              <h3 className="fw-extrabold text-dark mb-1">
+              <h3 className="fw-extrabold text-dark mb-1 fs-4">
                 You’re on the Waitlist!
               </h3>
-              <p className="text-muted small mb-4">
+              <p className="text-muted small mb-3">
                 We have registered your details in the official TravelZync queue.
               </p>
 
               {/* Queue Position Box */}
               <div
-                className="p-4 rounded-4 bg-light border mb-4 position-relative overflow-hidden"
+                className="p-3 p-sm-4 rounded-4 bg-light border mb-3 position-relative overflow-hidden"
                 style={{ borderColor: '#E5E7EB' }}
               >
-                <span className="text-muted small text-uppercase tracking-wider fw-semibold">
+                <span className="text-muted small text-uppercase tracking-wider fw-semibold" style={{ fontSize: '0.72rem' }}>
                   Assigned Queue Position
                 </span>
                 <div
-                  className="display-5 fw-extrabold text-tz-red my-1"
+                  className="display-6 fw-extrabold text-tz-red my-1"
                   style={{ letterSpacing: '-1px' }}
                 >
                   #{successResult.queue_number || '10,428'}
                 </div>
-                <div className="small text-muted">
+                <div className="small text-muted" style={{ fontSize: '0.8rem' }}>
                   Registered: {formData.email}
                   {formData.district ? ` • ${formData.district}` : ''}
                 </div>
               </div>
 
               {/* Viral Share Buttons */}
-              <div className="d-flex flex-column gap-2 mb-4">
+              <div className="d-flex flex-column gap-2 mb-3">
                 <button
-                  className="btn btn-success d-flex align-items-center justify-content-center gap-2 py-2 rounded-pill fw-semibold"
+                  className="btn btn-success d-flex align-items-center justify-content-center gap-2 py-2.5 rounded-pill fw-semibold"
                   onClick={handleWhatsAppShare}
                 >
                   <Share2 size={16} />

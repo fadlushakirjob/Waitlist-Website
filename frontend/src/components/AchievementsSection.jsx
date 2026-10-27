@@ -155,7 +155,7 @@ export default function AchievementsSection() {
   return (
     <section
       id="achievements"
-      className="py-5 bg-white position-relative"
+      className="section-padding bg-white position-relative"
       style={{
         borderBottom: '1px solid #F1F5F9',
         backgroundColor: '#FAFAFB',
@@ -179,7 +179,7 @@ export default function AchievementsSection() {
             <h2
               className="fw-extrabold text-dark mb-2"
               style={{
-                fontSize: 'clamp(1.9rem, 3.2vw, 2.4rem)',
+                fontSize: 'clamp(1.75rem, 3.2vw, 2.4rem)',
                 letterSpacing: '-0.5px',
                 lineHeight: 1.2,
               }}
@@ -190,7 +190,7 @@ export default function AchievementsSection() {
             <p
               className="text-secondary mb-0"
               style={{
-                fontSize: '1rem',
+                fontSize: 'clamp(0.925rem, 1.8vw, 1rem)',
                 maxWidth: '680px',
                 lineHeight: 1.6,
                 color: '#4B5563',
@@ -203,11 +203,11 @@ export default function AchievementsSection() {
 
           {/* QUICK SOCIAL CONNECT PILL */}
           <div
-            className="d-inline-flex align-items-center gap-2 p-2 px-3 rounded-pill bg-white border shadow-2xs"
+            className="d-inline-flex align-items-center gap-2 p-1.5 px-3 rounded-pill bg-white border shadow-2xs"
             style={{ borderColor: '#E5E7EB' }}
           >
-            <span className="small text-muted fw-semibold me-1 d-none d-sm-inline">
-              Follow Our Journey:
+            <span className="small text-muted fw-semibold me-1" style={{ fontSize: '0.8rem' }}>
+              Follow Us:
             </span>
             <div className="d-flex align-items-center gap-1.5">
               <a
@@ -257,8 +257,8 @@ export default function AchievementsSection() {
           </div>
         </div>
 
-        {/* 3 REDESIGNED SHOWCASE CARDS */}
-        <div className="row g-4 mb-4">
+        {/* 3 SHOWCASE CARDS */}
+        <div className="row g-3 g-md-4 mb-4">
           {achievements.map((item, idx) => {
             const AuthIcon = item.authorityIcon;
             return (
@@ -285,7 +285,7 @@ export default function AchievementsSection() {
 
                     {/* Gradient Overlay for Top Badges */}
                     <div
-                      className="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-between align-items-center"
+                      className="position-absolute top-0 start-0 w-100 p-2.5 p-sm-3 d-flex justify-content-between align-items-center"
                       style={{
                         background:
                           'linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%)',
@@ -293,7 +293,7 @@ export default function AchievementsSection() {
                     >
                       <span
                         className="badge glass-pill fw-semibold px-2.5 py-1 rounded-pill"
-                        style={{ fontSize: '0.7rem', letterSpacing: '0.4px' }}
+                        style={{ fontSize: '0.68rem', letterSpacing: '0.4px' }}
                       >
                         {item.category}
                       </span>
@@ -303,7 +303,7 @@ export default function AchievementsSection() {
                         style={{
                           backgroundColor: 'rgba(16, 185, 129, 0.9)',
                           color: '#ffffff',
-                          fontSize: '0.7rem',
+                          fontSize: '0.68rem',
                           backdropFilter: 'blur(4px)',
                         }}
                       >
@@ -314,7 +314,7 @@ export default function AchievementsSection() {
 
                     {/* Bottom Tag Bar */}
                     <div
-                      className="position-absolute bottom-0 start-0 w-100 p-3 pt-4 text-white"
+                      className="position-absolute bottom-0 start-0 w-100 p-2.5 p-sm-3 pt-4 text-white"
                       style={{
                         background:
                           'linear-gradient(0deg, rgba(17,24,39,0.85) 0%, rgba(17,24,39,0) 100%)',
@@ -327,7 +327,7 @@ export default function AchievementsSection() {
                   </div>
 
                   {/* Card Content Body */}
-                  <div className="p-4 d-flex flex-column flex-grow-1">
+                  <div className="p-3.5 p-sm-4 d-flex flex-column flex-grow-1">
                     {/* Authority / Partner Header */}
                     <div className="d-flex align-items-center gap-1.5 text-muted small mb-2">
                       <AuthIcon size={14} className="text-tz-red flex-shrink-0" />
@@ -361,15 +361,15 @@ export default function AchievementsSection() {
 
                     {/* Key takeaway callout */}
                     <div
-                      className="p-2.5 rounded-3 mb-3"
+                      className="p-2.5 px-3 rounded-3 mb-3"
                       style={{
                         backgroundColor: '#F3F4F6',
                         borderLeft: '3px solid #ED1C24',
                       }}
                     >
                       <div
-                        className="fw-semibold text-dark lh-sm"
-                        style={{ fontSize: '0.76rem' }}
+                        className="fw-semibold text-dark lh-base"
+                        style={{ fontSize: '0.78rem' }}
                       >
                         ⚡ {item.keyTakeaway}
                       </div>
@@ -395,9 +395,9 @@ export default function AchievementsSection() {
           })}
         </div>
 
-        {/* FOLLOW OUR JOURNEY DEDICATED COMMUNITY BAR */}
+        {/* COMMUNITY BAR */}
         <div
-          className="p-3.5 p-md-4 rounded-4 border bg-white shadow-sm mt-2 position-relative overflow-hidden"
+          className="p-3 p-sm-4 rounded-4 border bg-white shadow-sm mt-2 position-relative overflow-hidden"
           style={{
             borderColor: '#E5E7EB',
             background: 'linear-gradient(135deg, #ffffff 0%, #FAFAFB 100%)',
@@ -414,19 +414,19 @@ export default function AchievementsSection() {
               <h4 className="fw-bold text-dark mb-1 fs-5">
                 Follow Our Journey in Real Time
               </h4>
-              <p className="text-secondary small mb-0" style={{ maxWidth: '580px' }}>
+              <p className="text-secondary small mb-0" style={{ maxWidth: '580px', lineHeight: 1.55 }}>
                 Join our community across Kerala as we onboard private bus operators, conduct live route tests,
                 and expand digital mobility. Follow <strong className="text-dark">@travelzync</strong> on all major platforms.
               </p>
             </div>
 
             <div className="col-lg-5 text-lg-end">
-              <div className="d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
+              <div className="d-flex align-items-center justify-content-start justify-content-lg-end gap-2 flex-wrap">
                 <a
                   href="https://instagram.com/travelzync"
                   target="_blank"
                   rel="noreferrer"
-                  className="achievement-social-btn achievement-social-instagram px-3 py-2 text-white fw-semibold small gap-2"
+                  className="achievement-social-btn achievement-social-instagram px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
                   title="Follow on Instagram"
                 >
                   <InstagramIcon size={16} color="#ffffff" />
@@ -437,7 +437,7 @@ export default function AchievementsSection() {
                   href="https://linkedin.com/company/travelzync"
                   target="_blank"
                   rel="noreferrer"
-                  className="achievement-social-btn achievement-social-linkedin px-3 py-2 text-white fw-semibold small gap-2"
+                  className="achievement-social-btn achievement-social-linkedin px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
                   title="Connect on LinkedIn"
                 >
                   <LinkedInIcon size={16} color="#ffffff" />
@@ -448,7 +448,7 @@ export default function AchievementsSection() {
                   href="https://youtube.com/@travelzync"
                   target="_blank"
                   rel="noreferrer"
-                  className="achievement-social-btn achievement-social-youtube px-3 py-2 text-white fw-semibold small gap-2"
+                  className="achievement-social-btn achievement-social-youtube px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
                   title="Subscribe on YouTube"
                 >
                   <YouTubeIcon size={16} color="#ffffff" />
@@ -459,7 +459,7 @@ export default function AchievementsSection() {
                   href="https://x.com/travelzync"
                   target="_blank"
                   rel="noreferrer"
-                  className="achievement-social-btn achievement-social-x px-3 py-2 text-white fw-semibold small gap-2"
+                  className="achievement-social-btn achievement-social-x px-3 py-2 text-white fw-semibold small gap-1.5 flex-grow-1 flex-sm-grow-0"
                   title="Follow on X"
                 >
                   <XTwitterIcon size={15} color="#ffffff" />
@@ -485,120 +485,75 @@ export default function AchievementsSection() {
           onClick={() => setSelectedAchievement(null)}
         >
           <div
-            className="modal-dialog modal-dialog-centered modal-lg"
+            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
-              {/* Photo Hero with Controls */}
+              {/* Modal Header Bar */}
+              <div className="modal-header bg-white border-bottom px-3 px-sm-4 py-2.5 d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center gap-2">
+                  <span className="badge bg-light text-dark border rounded-pill px-2.5 py-1 fw-semibold" style={{ fontSize: '0.72rem' }}>
+                    {selectedAchievement.category}
+                  </span>
+                  <span className="badge bg-danger rounded-pill px-2.5 py-1 fw-bold" style={{ fontSize: '0.72rem' }}>
+                    {currentIndex + 1} of {achievements.length}
+                  </span>
+                </div>
+
+                <div className="d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-light rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-2xs"
+                    style={{ width: '36px', height: '36px' }}
+                    onClick={handleShare}
+                    title="Share this milestone"
+                  >
+                    {copied ? <Check size={16} className="text-success" /> : <Share2 size={16} />}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-light rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-2xs"
+                    style={{ width: '36px', height: '36px' }}
+                    onClick={() => setSelectedAchievement(null)}
+                    title="Close"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Photo Frame */}
               <div
                 className="position-relative bg-dark"
-                style={{ maxHeight: '340px', overflow: 'hidden' }}
+                style={{ height: 'clamp(180px, 32vw, 260px)', overflow: 'hidden' }}
               >
                 <img
                   src={selectedAchievement.image}
                   alt={selectedAchievement.title}
-                  className="w-100 object-fit-cover"
-                  style={{ maxHeight: '340px', filter: 'brightness(0.92)' }}
+                  className="w-100 h-100"
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: 'center 35%',
+                  }}
                 />
-
-                {/* Top Action Bar */}
-                <div className="position-absolute top-0 start-0 w-100 p-3 p-md-4 d-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="badge glass-pill rounded-pill px-3 py-1.5 fw-semibold small">
-                      {selectedAchievement.category}
-                    </span>
-                    <span className="badge bg-danger rounded-pill px-2.5 py-1.5 fw-bold small">
-                      Milestone {currentIndex + 1} of {achievements.length}
-                    </span>
-                  </div>
-
-                  <div className="d-flex align-items-center gap-2">
-                    <button
-                      type="button"
-                      className="btn btn-dark rounded-circle p-2 d-flex align-items-center justify-content-center shadow"
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'rgba(17, 24, 39, 0.75)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                      }}
-                      onClick={handleShare}
-                      title="Share this milestone"
-                    >
-                      {copied ? <Check size={18} className="text-success" /> : <Share2 size={18} />}
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-dark rounded-circle p-2 d-flex align-items-center justify-content-center shadow"
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'rgba(17, 24, 39, 0.75)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                      }}
-                      onClick={() => setSelectedAchievement(null)}
-                      title="Close"
-                    >
-                      <X size={20} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Prev / Next floating overlay controls */}
-                <button
-                  type="button"
-                  className="btn btn-dark rounded-circle position-absolute top-50 start-0 translate-middle-y ms-3 p-2 d-none d-md-flex align-items-center justify-content-center shadow"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    background: 'rgba(17, 24, 39, 0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    zIndex: 2,
-                  }}
-                  onClick={handlePrev}
-                  title="Previous Milestone (Left Arrow)"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-
-                <button
-                  type="button"
-                  className="btn btn-dark rounded-circle position-absolute top-50 end-0 translate-middle-y me-3 p-2 d-none d-md-flex align-items-center justify-content-center shadow"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    background: 'rgba(17, 24, 39, 0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    zIndex: 2,
-                  }}
-                  onClick={handleNext}
-                  title="Next Milestone (Right Arrow)"
-                >
-                  <ChevronRight size={20} />
-                </button>
-
-                {/* Bottom title vignette */}
-                <div
-                  className="position-absolute bottom-0 start-0 w-100 p-4 text-white"
-                  style={{
-                    background:
-                      'linear-gradient(180deg, transparent 0%, rgba(17, 24, 39, 0.95) 100%)',
-                  }}
-                >
-                  <span className="badge bg-danger rounded-pill px-3 py-1 mb-2">
-                    {selectedAchievement.badge}
-                  </span>
-                  <h3 className="fw-bold mb-1 fs-4">{selectedAchievement.title}</h3>
-                  <p className="small mb-0 text-white-50">{selectedAchievement.subtitle}</p>
-                </div>
               </div>
 
               {/* Modal Body */}
               <div
-                className="modal-body p-4 p-md-5"
-                style={{ maxHeight: '55vh', overflowY: 'auto' }}
+                className="modal-body p-3 p-sm-4 p-md-5"
+                style={{ overflowY: 'auto' }}
               >
+                {/* Milestone Title Header */}
+                <div className="mb-3">
+                  <span className="badge bg-danger rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>
+                    {selectedAchievement.badge}
+                  </span>
+                  <h3 className="fw-extrabold text-dark mb-1" style={{ fontSize: 'clamp(1.25rem, 3.5vw, 1.6rem)', lineHeight: 1.3 }}>
+                    {selectedAchievement.title}
+                  </h3>
+                  <p className="text-secondary small mb-0 fw-semibold">{selectedAchievement.subtitle}</p>
+                </div>
                 {/* Copied feedback alert */}
                 {copied && (
                   <div className="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 small rounded-3">
@@ -608,20 +563,20 @@ export default function AchievementsSection() {
                 )}
 
                 {/* Quick Facts Strip */}
-                <div className="row g-2 mb-4 p-3 rounded-3 bg-light border">
-                  <div className="col-sm-4">
+                <div className="row g-2 mb-3 p-2.5 p-sm-3 rounded-3 bg-light border">
+                  <div className="col-12 col-sm-4">
                     <div className="text-muted small" style={{ fontSize: '0.72rem' }}>
                       INSTITUTION / PARTNER
                     </div>
                     <div className="fw-bold text-dark small">{selectedAchievement.institution}</div>
                   </div>
-                  <div className="col-sm-4">
+                  <div className="col-12 col-sm-4">
                     <div className="text-muted small" style={{ fontSize: '0.72rem' }}>
                       KEY FOCUS AREA
                     </div>
                     <div className="fw-bold text-dark small">{selectedAchievement.impactArea}</div>
                   </div>
-                  <div className="col-sm-4">
+                  <div className="col-12 col-sm-4">
                     <div className="text-muted small" style={{ fontSize: '0.72rem' }}>
                       ARCHIVE STATUS
                     </div>
@@ -633,8 +588,8 @@ export default function AchievementsSection() {
                 </div>
 
                 {/* Official archive seal message */}
-                <div className="d-flex align-items-center gap-2 mb-4 p-3 rounded-3 bg-tz-red-light border border-danger-subtle">
-                  <Quote size={22} className="text-tz-red flex-shrink-0" />
+                <div className="d-flex align-items-center gap-2 mb-3 p-2.5 p-sm-3 rounded-3 bg-tz-red-light border border-danger-subtle">
+                  <Quote size={20} className="text-tz-red flex-shrink-0" />
                   <span className="fw-semibold text-dark small">
                     Verified milestone document from TravelZync Labs Private Limited official archive.
                   </span>
@@ -645,10 +600,10 @@ export default function AchievementsSection() {
                   {selectedAchievement.fullText.map((paragraph, index) => (
                     <p
                       key={index}
-                      className="text-secondary"
+                      className="text-secondary mb-3"
                       style={{
-                        fontSize: '0.975rem',
-                        lineHeight: 1.75,
+                        fontSize: '0.925rem',
+                        lineHeight: 1.7,
                         fontWeight:
                           paragraph.startsWith('Exploring') ||
                           paragraph.startsWith('TravelZync Labs —')
@@ -664,36 +619,33 @@ export default function AchievementsSection() {
               </div>
 
               {/* Modal Footer with Carousel and Close */}
-              <div className="modal-footer bg-light px-4 py-2.5 d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center gap-2">
+              <div className="modal-footer bg-light px-3 px-sm-4 py-2.5 d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center gap-1.5">
                   <button
                     type="button"
-                    className="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-1"
+                    className="btn btn-outline-secondary btn-sm rounded-pill px-2.5 px-sm-3 d-flex align-items-center gap-1"
                     onClick={handlePrev}
                   >
                     <ChevronLeft size={16} />
-                    Prev
+                    <span className="d-none d-sm-inline">Prev</span>
                   </button>
-                  <span className="small text-muted d-none d-sm-inline">
+                  <span className="small text-muted px-1">
                     {currentIndex + 1} / {achievements.length}
                   </span>
                   <button
                     type="button"
-                    className="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-1"
+                    className="btn btn-outline-secondary btn-sm rounded-pill px-2.5 px-sm-3 d-flex align-items-center gap-1"
                     onClick={handleNext}
                   >
-                    Next
+                    <span className="d-none d-sm-inline">Next</span>
                     <ChevronRight size={16} />
                   </button>
                 </div>
 
-                <div className="d-flex align-items-center gap-3">
-                  <span className="font-script fs-5 text-muted d-none d-md-inline">
-                    TravelZync Labs Private Limited
-                  </span>
+                <div className="d-flex align-items-center gap-2">
                   <button
                     type="button"
-                    className="btn btn-dark rounded-pill px-4 btn-sm fw-semibold"
+                    className="btn btn-dark rounded-pill px-3 px-sm-4 btn-sm fw-semibold"
                     onClick={() => setSelectedAchievement(null)}
                   >
                     Close Story

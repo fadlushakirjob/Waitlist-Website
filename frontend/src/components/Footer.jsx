@@ -17,10 +17,11 @@ export default function Footer({
 }) {
   return (
     <footer
-      className="bg-dark text-white pt-5 pb-4 position-relative"
+      className="bg-dark text-white pt-4 pt-md-5 position-relative"
       style={{
         backgroundColor: '#0F172A',
         borderTop: '3px solid #ED1C24',
+        paddingBottom: 'max(1.75rem, calc(1rem + env(safe-area-inset-bottom)))',
       }}
     >
       <div className="tz-container">
@@ -31,7 +32,7 @@ export default function Footer({
               <img
                 src="/travelzync_logo_clean.png"
                 alt="TravelZync Official Logo"
-                style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }}
+                style={{ width: '38px', height: '38px', objectFit: 'contain', borderRadius: '8px' }}
               />
               <div className="d-flex flex-column">
                 <span className="fw-bold fs-5 lh-1 text-white">
@@ -55,7 +56,8 @@ export default function Footer({
                 href="https://linkedin.com/company/travelzync"
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
+                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
+                style={{ width: '34px', height: '34px' }}
                 title="LinkedIn"
               >
                 <LinkedInIcon size={14} color="#ffffff" />
@@ -64,7 +66,8 @@ export default function Footer({
                 href="https://instagram.com/travelzync"
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
+                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
+                style={{ width: '34px', height: '34px' }}
                 title="Instagram"
               >
                 <InstagramIcon size={14} color="#ffffff" />
@@ -73,7 +76,8 @@ export default function Footer({
                 href="https://youtube.com/@travelzync"
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
+                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
+                style={{ width: '34px', height: '34px' }}
                 title="YouTube"
               >
                 <YouTubeIcon size={14} color="#ffffff" />
@@ -82,7 +86,8 @@ export default function Footer({
                 href="https://x.com/travelzync"
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white"
+                className="btn btn-sm btn-outline-secondary rounded-circle p-2 text-white d-flex align-items-center justify-content-center"
+                style={{ width: '34px', height: '34px' }}
                 title="X (Twitter)"
               >
                 <XTwitterIcon size={14} color="#ffffff" />
@@ -91,7 +96,7 @@ export default function Footer({
           </div>
 
           {/* Quick Links */}
-          <div className="col-lg-2 col-md-6">
+          <div className="col-lg-2 col-md-6 col-6">
             <h6 className="text-uppercase fw-bold text-white small mb-3 tracking-wider" style={{ fontSize: '0.8rem' }}>
               Navigation
             </h6>
@@ -113,7 +118,7 @@ export default function Footer({
               </li>
               <li>
                 <a href="#achievements" className="text-decoration-none text-secondary hover-white">
-                  Our Journey (Achievements)
+                  Our Journey
                 </a>
               </li>
               <li>
@@ -125,26 +130,26 @@ export default function Footer({
           </div>
 
           {/* Key Milestones */}
-          <div className="col-lg-3 col-md-6">
+          <div className="col-lg-3 col-md-6 col-6">
             <h6 className="text-uppercase fw-bold text-white small mb-3 tracking-wider" style={{ fontSize: '0.8rem' }}>
-              Verified Highlights
+              Highlights
             </h6>
             <ul className="list-unstyled d-flex flex-column gap-2 small text-secondary" style={{ fontSize: '0.825rem' }}>
-              <li className="d-flex align-items-center gap-1.5">
-                <span className="text-danger">•</span>
+              <li className="d-flex align-items-start">
+                <span className="text-danger me-2" style={{ fontSize: '1rem', lineHeight: 1 }}>•</span>
                 <span>Best Startup Runner-up, NIT Calicut</span>
               </li>
-              <li className="d-flex align-items-center gap-1.5">
-                <span className="text-danger">•</span>
+              <li className="d-flex align-items-start">
+                <span className="text-danger me-2" style={{ fontSize: '1rem', lineHeight: 1 }}>•</span>
                 <span>Showcased to Kerala Transport Minister</span>
               </li>
-              <li className="d-flex align-items-center gap-1.5">
-                <span className="text-danger">•</span>
+              <li className="d-flex align-items-start">
+                <span className="text-danger me-2" style={{ fontSize: '1rem', lineHeight: 1 }}>•</span>
                 <span>KSRTC & Fleet Integration Talks</span>
               </li>
-              <li className="d-flex align-items-center gap-1.5">
-                <span className="text-danger">•</span>
-                <span>Target: 300+ Private Buses in Kerala</span>
+              <li className="d-flex align-items-start">
+                <span className="text-danger me-2" style={{ fontSize: '1rem', lineHeight: 1 }}>•</span>
+                <span>Target: 300+ Private Buses</span>
               </li>
             </ul>
           </div>
@@ -161,9 +166,9 @@ export default function Footer({
             </div>
 
             <button
-              className="btn btn-tz-primary btn-sm px-3 py-1.5"
+              className="btn btn-tz-primary btn-sm px-3.5 py-2 w-100 w-sm-auto justify-content-center"
               onClick={onOpenWaitlist}
-              style={{ fontSize: '0.8rem' }}
+              style={{ fontSize: '0.825rem' }}
             >
               Join Official Waitlist
             </button>
@@ -172,14 +177,14 @@ export default function Footer({
 
         {/* Bottom Sub-Footer Bar */}
         <div
-          className="pt-3 border-top d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 text-secondary small"
+          className="pt-3 border-top d-flex flex-column flex-md-row align-items-center justify-content-between gap-2.5 text-secondary small text-center text-md-start"
           style={{ borderColor: 'rgba(255,255,255,0.1)', fontSize: '0.8rem' }}
         >
           <div>
             © {new Date().getFullYear()} TravelZync Labs Private Limited. All rights reserved.
           </div>
 
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center justify-content-center gap-2 gap-sm-3 flex-wrap">
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white"
               onClick={onOpenPrivacy}
@@ -187,7 +192,7 @@ export default function Footer({
             >
               Privacy Policy
             </button>
-            <span>•</span>
+            <span className="text-white-50">•</span>
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white"
               onClick={onOpenTerms}
@@ -195,7 +200,7 @@ export default function Footer({
             >
               Terms and Conditions
             </button>
-            <span>•</span>
+            <span className="text-white-50">•</span>
             <button
               className="btn btn-link p-0 text-secondary small text-decoration-none hover-white d-flex align-items-center gap-1"
               onClick={onOpenAdmin}

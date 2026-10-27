@@ -77,7 +77,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
     >
       <div className="tz-container">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-5">
+        <div className="text-center mx-auto mb-4 mb-md-5" style={{ maxWidth: '680px' }}>
           <div className="d-inline-flex align-items-center gap-1.5 px-3 py-1 mb-2 rounded-pill bg-tz-red-light border border-danger-subtle">
             <Sparkles size={14} className="text-tz-red" />
             <span className="text-tz-red fw-bold" style={{ fontSize: '0.75rem' }}>
@@ -86,13 +86,13 @@ export default function FeaturesSection({ onOpenWaitlist }) {
           </div>
           <h2
             className="fw-extrabold tracking-tight text-dark mb-2"
-            style={{ fontSize: '2.2rem', letterSpacing: '-0.5px' }}
+            style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.2rem)', letterSpacing: '-0.5px' }}
           >
             Smarter Mobility for Every Commuter
           </h2>
           <p
             className="text-secondary mx-auto"
-            style={{ fontSize: '1rem', maxWidth: '620px', lineHeight: 1.6 }}
+            style={{ fontSize: 'clamp(0.925rem, 1.8vw, 1rem)', lineHeight: 1.6 }}
           >
             TravelZync connects passengers, bus operators, and transit networks into one unified,
             seamless ecosystem built specifically for Kerala's commuting culture.
@@ -100,11 +100,11 @@ export default function FeaturesSection({ onOpenWaitlist }) {
         </div>
 
         {/* 4 Feature Cards Grid */}
-        <div className="row g-4 mb-5">
+        <div className="row g-3 g-md-4 mb-4 mb-md-5">
           {features.map((feat, idx) => (
             <div key={idx} className="col-md-6 col-lg-3">
               <div
-                className="tz-card h-100 p-4 d-flex flex-column justify-content-between"
+                className="tz-card h-100 p-3.5 p-sm-4 d-flex flex-column justify-content-between"
                 style={{
                   border: '1px solid #E5E7EB',
                 }}
@@ -168,7 +168,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
 
         {/* Callout Banner */}
         <div
-          className="p-4 p-md-4 rounded-4 text-white d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 shadow-md"
+          className="p-3.5 p-sm-4 rounded-4 text-white d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 shadow-md"
           style={{
             background: 'linear-gradient(135deg, #111827 0%, #1F2937 60%, #B91C1C 100%)',
           }}
@@ -191,7 +191,7 @@ export default function FeaturesSection({ onOpenWaitlist }) {
             </p>
           </div>
           <button
-            className="btn btn-tz-primary px-4 py-2.5 flex-shrink-0"
+            className="btn btn-tz-primary px-4 py-2.5 flex-shrink-0 w-100 w-md-auto"
             onClick={onOpenWaitlist}
             id="features-join-waitlist-btn"
           >

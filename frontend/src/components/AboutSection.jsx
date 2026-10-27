@@ -44,13 +44,13 @@ export default function AboutSection({ onOpenWaitlist }) {
 
             <h2
               className="fw-extrabold text-dark mb-3 tracking-tight"
-              style={{ fontSize: '2.2rem', lineHeight: 1.2, letterSpacing: '-0.5px' }}
+              style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.2rem)', lineHeight: 1.2, letterSpacing: '-0.5px' }}
             >
               Transforming Kerala’s Commute, <br />
               <span style={{ color: '#ED1C24' }}>One Journey at a Time</span>
             </h2>
 
-            <p className="lead text-secondary mb-3" style={{ fontSize: '1rem', lineHeight: 1.65 }}>
+            <p className="lead text-secondary mb-3" style={{ fontSize: 'clamp(0.95rem, 1.8vw, 1.05rem)', lineHeight: 1.65 }}>
               Public transportation is the lifeblood of Kerala. Millions of students, professionals,
               and families rely daily on over 12,000 private and KSRTC buses to move across cities,
               towns, and villages.
@@ -65,9 +65,9 @@ export default function AboutSection({ onOpenWaitlist }) {
             </p>
 
             {/* Core Pillars */}
-            <div className="row g-2.5 mb-4">
+            <div className="row g-2 mb-4">
               <div className="col-12 col-sm-4">
-                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                <div className="d-flex align-items-center gap-2 p-2.5 px-3 rounded-3 bg-light border h-100">
                   <div
                     className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
                     style={{ width: '28px', height: '28px' }}
@@ -80,7 +80,7 @@ export default function AboutSection({ onOpenWaitlist }) {
                 </div>
               </div>
               <div className="col-12 col-sm-4">
-                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                <div className="d-flex align-items-center gap-2 p-2.5 px-3 rounded-3 bg-light border h-100">
                   <div
                     className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
                     style={{ width: '28px', height: '28px' }}
@@ -93,7 +93,7 @@ export default function AboutSection({ onOpenWaitlist }) {
                 </div>
               </div>
               <div className="col-12 col-sm-4">
-                <div className="d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 bg-light border h-100">
+                <div className="d-flex align-items-center gap-2 p-2.5 px-3 rounded-3 bg-light border h-100">
                   <div
                     className="rounded-circle d-flex align-items-center justify-content-center bg-white border shadow-2xs flex-shrink-0"
                     style={{ width: '28px', height: '28px' }}
@@ -109,7 +109,7 @@ export default function AboutSection({ onOpenWaitlist }) {
 
             <div>
               <button
-                className="btn btn-tz-primary px-4 py-2"
+                className="btn btn-tz-primary px-4 py-2.5 w-100 w-sm-auto justify-content-center"
                 onClick={onOpenWaitlist}
               >
                 <span>Join the Movement</span>
@@ -121,7 +121,7 @@ export default function AboutSection({ onOpenWaitlist }) {
           {/* Right: The Transformation Matrix Card */}
           <div className="col-lg-6">
             <div
-              className="p-4 rounded-4 border shadow-2xs position-relative overflow-hidden"
+              className="p-3 p-sm-4 rounded-4 border shadow-xs position-relative overflow-hidden"
               style={{
                 background: '#FAFAFA',
                 borderColor: '#E5E7EB',
@@ -134,11 +134,11 @@ export default function AboutSection({ onOpenWaitlist }) {
                 </span>
               </div>
 
-              <div className="d-flex flex-column gap-3">
+              <div className="d-flex flex-column gap-2.5">
                 {painPoints.map((item, i) => (
                   <div
                     key={i}
-                    className="p-3.5 rounded-3 bg-white border shadow-2xs"
+                    className="p-3 rounded-3 bg-white border shadow-2xs"
                     style={{ borderColor: '#E5E7EB' }}
                   >
                     {/* Problem Row */}

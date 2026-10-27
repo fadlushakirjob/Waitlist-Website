@@ -136,8 +136,6 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
       return;
     }
 
-    // STRICT USER REQUIREMENT:
-    // Without "travelzync_admin_2026" this password it SHOULD NOT lead to admin dashboard!
     if (cleanPassword !== 'travelzync_admin_2026') {
       setIsAuthenticated(false);
       setAdminKey('');
@@ -211,13 +209,13 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
       onClick={onClose}
     >
       <div
-        className="modal-dialog modal-dialog-centered modal-xl"
+        className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="modal-header bg-dark text-white border-0 px-4 py-3 d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center gap-2.5">
+          <div className="modal-header bg-dark text-white border-0 px-3 px-sm-4 py-3 d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-2 gap-sm-2.5">
               <img
                 src="/travelzync_logo_clean.png"
                 alt="TravelZync Official Logo"
@@ -225,7 +223,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
               />
               <div>
                 <h5 className="modal-title fw-bold fs-6 mb-0">
-                  {isAuthenticated ? 'TravelZync Admin Management Portal' : 'TravelZync Administrator Login'}
+                  {isAuthenticated ? 'Admin Management Portal' : 'Administrator Login'}
                 </h5>
                 <span className="text-white-50" style={{ fontSize: '0.75rem' }}>
                   {isAuthenticated ? 'Waitlist Database & Commuter Registrations' : 'Authorized Personnel Sign In'}
@@ -240,7 +238,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                     href="http://127.0.0.1:8000/admin/"
                     target="_blank"
                     rel="noreferrer"
-                    className="btn btn-sm btn-outline-light d-flex align-items-center gap-1 rounded-pill"
+                    className="btn btn-sm btn-outline-light d-none d-sm-flex align-items-center gap-1 rounded-pill"
                     style={{ fontSize: '0.78rem' }}
                   >
                     <ExternalLink size={13} />
@@ -270,15 +268,15 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
           </div>
 
           {/* Modal Body */}
-          <div className="modal-body p-4 bg-light" style={{ minHeight: '480px' }}>
+          <div className="modal-body p-3 p-sm-4 bg-light" style={{ minHeight: '420px' }}>
             {!isAuthenticated ? (
               /* LOGIN SCREEN */
-              <div className="max-w-md mx-auto my-4 p-4 p-sm-5 rounded-4 bg-white border shadow-sm text-center" style={{ maxWidth: '440px' }}>
-                <div className="d-inline-flex p-3 rounded-circle bg-light border mb-3 shadow-2xs">
+              <div className="mx-auto my-2 my-sm-4 p-3.5 p-sm-4 p-md-5 rounded-4 bg-white border shadow-sm text-center" style={{ maxWidth: '440px' }}>
+                <div className="d-inline-flex p-2.5 rounded-circle bg-light border mb-2.5 shadow-2xs">
                   <img
                     src="/travelzync_logo_clean.png"
                     alt="TravelZync"
-                    style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                    style={{ width: '44px', height: '44px', objectFit: 'contain' }}
                   />
                 </div>
 
@@ -286,26 +284,26 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                   <span className="badge rounded-pill bg-danger-subtle text-danger px-3 py-1 fw-semibold small mb-2" style={{ fontSize: '0.72rem', letterSpacing: '0.05em' }}>
                     RESTRICTED ADMIN ACCESS
                   </span>
-                  <h4 className="fw-bold text-dark mb-1">Admin Portal Login</h4>
+                  <h4 className="fw-bold text-dark mb-1 fs-5">Admin Portal Login</h4>
                   <p className="text-muted small mb-0" style={{ fontSize: '0.825rem' }}>
                     Enter administrator credentials to manage waitlist registrations.
                   </p>
                 </div>
 
                 {errorMsg && (
-                  <div className="alert alert-danger py-2.5 px-3 small text-start mb-3 d-flex align-items-start gap-2 rounded-3 border-danger-subtle">
-                    <ShieldAlert size={18} className="text-danger flex-shrink-0 mt-0.5" />
+                  <div className="alert alert-danger py-2 px-3 small text-start mb-3 d-flex align-items-start gap-2 rounded-3 border-danger-subtle">
+                    <ShieldAlert size={16} className="text-danger flex-shrink-0 mt-0.5" />
                     <div style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>{errorMsg}</div>
                   </div>
                 )}
 
                 <form onSubmit={handleLogin} className="text-start">
-                  <div className="mb-3">
+                  <div className="mb-2.5">
                     <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '0.8rem' }}>
                       Administrator Username
                     </label>
                     <div className="input-group">
-                      <span className="input-group-text bg-light text-muted border-end-0">
+                      <span className="input-group-text bg-light text-muted border-end-0 px-2.5">
                         <User size={16} />
                       </span>
                       <input
@@ -325,7 +323,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       Admin Password
                     </label>
                     <div className="input-group">
-                      <span className="input-group-text bg-light text-muted border-end-0">
+                      <span className="input-group-text bg-light text-muted border-end-0 px-2.5">
                         <Lock size={16} />
                       </span>
                       <input
@@ -381,7 +379,6 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       type="button"
                       className="btn btn-link p-0 text-muted small text-decoration-none d-flex align-items-center gap-1.5"
                       onClick={() => setShowServerSettings(!showServerSettings)}
-
                       style={{ fontSize: '0.78rem' }}
                     >
                       <span>⚙️ Backend Server URL</span>
@@ -455,21 +452,21 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
               /* ADMIN DASHBOARD INTERFACE */
               <div>
                 {/* Stats Bar */}
-                <div className="row g-3 mb-4">
-                  <div className="col-md-4">
-                    <div className="p-3 bg-white rounded-3 border shadow-2xs d-flex align-items-center justify-content-between">
+                <div className="row g-2.5 mb-3 mb-sm-4">
+                  <div className="col-12 col-md-4">
+                    <div className="p-3 bg-white rounded-3 border shadow-xs d-flex align-items-center justify-content-between">
                       <div>
                         <div className="text-muted small fw-semibold">Total Filtered Records</div>
                         <div className="fs-4 fw-extrabold text-dark">{totalCount}</div>
                       </div>
                       <div className="p-2 rounded-3 bg-tz-red-light text-tz-red">
-                        <Users size={24} />
+                        <Users size={22} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="col-md-4">
-                    <div className="p-3 bg-white rounded-3 border shadow-2xs d-flex align-items-center justify-content-between">
+                  <div className="col-12 col-md-4">
+                    <div className="p-3 bg-white rounded-3 border shadow-xs d-flex align-items-center justify-content-between">
                       <div>
                         <div className="text-muted small fw-semibold">Export Format</div>
                         <div className="fs-6 fw-bold text-dark">Standard UTF-8 CSV</div>
@@ -484,8 +481,8 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                     </div>
                   </div>
 
-                  <div className="col-md-4">
-                    <div className="p-3 bg-white rounded-3 border shadow-2xs d-flex align-items-center justify-content-between">
+                  <div className="col-12 col-md-4">
+                    <div className="p-3 bg-white rounded-3 border shadow-xs d-flex align-items-center justify-content-between">
                       <div>
                         <div className="text-muted small fw-semibold">Session Status</div>
                         <div className="fs-6 fw-bold text-success d-flex align-items-center gap-1">
@@ -493,7 +490,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                         </div>
                       </div>
                       <button
-                        className="btn btn-outline-danger btn-sm rounded-pill"
+                        className="btn btn-outline-danger btn-sm rounded-pill px-3"
                         onClick={handleLogout}
                       >
                         Lock
@@ -503,11 +500,11 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                 </div>
 
                 {/* Filters & Search Control Bar */}
-                <div className="p-3 bg-white rounded-3 border shadow-2xs mb-3">
+                <div className="p-2.5 p-sm-3 bg-white rounded-3 border shadow-xs mb-3">
                   <div className="row g-2 align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-12 col-md-4">
                       <div className="input-group input-group-sm">
-                        <span className="input-group-text bg-light border-end-0">
+                        <span className="input-group-text bg-light border-end-0 px-2">
                           <Search size={14} className="text-muted" />
                         </span>
                         <input
@@ -520,7 +517,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       </div>
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-12 col-md-3">
                       <select
                         className="form-select form-select-sm"
                         value={district}
@@ -535,7 +532,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       </select>
                     </div>
 
-                    <div className="col-md-3 d-flex gap-1">
+                    <div className="col-8 col-md-3 d-flex gap-1">
                       <input
                         type="date"
                         className="form-control form-control-sm"
@@ -552,16 +549,16 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                       />
                     </div>
 
-                    <div className="col-md-2 d-flex gap-2">
+                    <div className="col-4 col-md-2 d-flex gap-1.5">
                       <button
                         className="btn btn-dark btn-sm flex-grow-1"
                         onClick={() => loadData(adminKey)}
                       >
-                        Apply Filter
+                        Filter
                       </button>
                       <button
-                        className="btn btn-outline-secondary btn-sm"
-                        title="Refresh"
+                        className="btn btn-outline-secondary btn-sm p-1.5"
+                        title="Reset Filters"
                         onClick={() => {
                           setSearch('');
                           setDistrict('');
@@ -577,7 +574,7 @@ export default function AdminDashboardModal({ isOpen, onClose }) {
                 </div>
 
                 {/* Registrations Table */}
-                <div className="bg-white rounded-3 border shadow-2xs overflow-hidden">
+                <div className="bg-white rounded-3 border shadow-xs overflow-hidden">
                   <div className="table-responsive" style={{ maxHeight: '380px' }}>
                     <table className="table table-hover align-middle mb-0" style={{ fontSize: '0.85rem' }}>
                       <thead className="table-light sticky-top">

@@ -44,7 +44,7 @@ export default function ContactSection() {
               </span>
             </div>
 
-            <h2 className="fw-extrabold text-dark mb-3 tracking-tight" style={{ fontSize: '2.1rem', letterSpacing: '-0.5px' }}>
+            <h2 className="fw-extrabold text-dark mb-3 tracking-tight" style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.1rem)', letterSpacing: '-0.5px' }}>
               Have Questions or Operate a Bus Fleet?
             </h2>
 
@@ -53,9 +53,9 @@ export default function ContactSection() {
               bus operator interested in our free GPS integration kit, our team is ready to connect.
             </p>
 
-            <div className="d-flex flex-column gap-3">
+            <div className="d-flex flex-column gap-2.5">
               <div
-                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
                 style={{ borderColor: '#E5E7EB' }}
               >
                 <div
@@ -79,7 +79,7 @@ export default function ContactSection() {
               </div>
 
               <div
-                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
                 style={{ borderColor: '#E5E7EB' }}
               >
                 <div
@@ -99,7 +99,7 @@ export default function ContactSection() {
               </div>
 
               <div
-                className="d-flex align-items-start gap-3 p-3.5 rounded-3 bg-white border shadow-2xs transition-all"
+                className="d-flex align-items-start gap-3 p-3 rounded-3 bg-white border shadow-xs"
                 style={{ borderColor: '#E5E7EB' }}
               >
                 <div
@@ -122,7 +122,7 @@ export default function ContactSection() {
 
           {/* Contact Inquiry Form */}
           <div className="col-lg-7">
-            <div className="tz-card p-4 p-md-4 bg-white border shadow-xs rounded-4">
+            <div className="tz-card p-3.5 p-sm-4 bg-white border shadow-xs rounded-4">
               <h5 className="fw-bold text-dark mb-1">Send Us a Direct Message</h5>
               <p className="text-muted small mb-3" style={{ fontSize: '0.825rem' }}>
                 Fill in the details below and a TravelZync representative will respond promptly.
@@ -158,8 +158,8 @@ export default function ContactSection() {
                       <div>{errorMessage}</div>
                     </div>
                   )}
-                  <div className="row g-2.5 mb-2.5">
-                    <div className="col-md-6">
+                  <div className="row g-2 mb-2.5">
+                    <div className="col-12 col-md-6">
                       <label className="form-label small fw-semibold text-dark mb-1">Your Name</label>
                       <input
                         type="text"
@@ -170,7 +170,7 @@ export default function ContactSection() {
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-12 col-md-6">
                       <label className="form-label small fw-semibold text-dark mb-1">Email Address</label>
                       <input
                         type="email"
@@ -212,12 +212,12 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={isSending}
-                    className="btn btn-tz-primary px-3 py-2 btn-sm"
+                    className="btn btn-tz-primary px-4 py-2.5 w-100 w-sm-auto justify-content-center"
                   >
                     {isSending ? (
                       <span className="spinner-border spinner-border-sm me-1" />
                     ) : (
-                      <Send size={14} />
+                      <Send size={15} />
                     )}
                     <span>{isSending ? 'Sending...' : 'Send Message'}</span>
                   </button>
