@@ -20,5 +20,6 @@
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.2.0"
-  }
+  },
+  "proxy": "https://travelzync-backend.onrender.com"
 }
