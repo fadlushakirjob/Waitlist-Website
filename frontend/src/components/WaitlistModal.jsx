@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { joinWaitlist, getKeralaDistricts } from '../services/api';
+import passTemplateImg from '../assets/travelzync_waitlist_pass_template.png';
 
 /**
  * Format the user's name accurately in Title Case for the personalized pass,
@@ -62,6 +63,9 @@ export default function WaitlistModal({
 
   const autoShowTimerRef = useRef(null);
   const countdownIntervalRef = useRef(null);
+
+  // Both bundled hashed asset and public root fallback
+  const passImageSource = passTemplateImg || '/travelzync_waitlist_pass_template.png';
 
   useEffect(() => {
     if (initialEmail) {
@@ -208,7 +212,7 @@ export default function WaitlistModal({
   const nameLength = displayName.length;
 
   // Accurate typography scale based on character count so names never wrap or overflow
-  const nameScale = nameLength > 24 ? 0.72 : nameLength > 16 ? 0.86 : 1.0;
+  const nameScale = nameLength > 24 ? 0.74 : nameLength > 16 ? 0.88 : 1.0;
 
   // Phone-friendly Share or Download handler using Web Share API with Canvas fallback
   const handleShareOrDownloadPass = async () => {
@@ -219,7 +223,7 @@ export default function WaitlistModal({
       const ctx = canvas.getContext('2d');
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.src = '/travelzync_waitlist_pass_template.png';
+      img.src = passImageSource;
 
       img.onload = async () => {
         ctx.drawImage(img, 0, 0, 576, 1024);
@@ -267,6 +271,10 @@ export default function WaitlistModal({
 
         downloadFromCanvas(canvas);
       };
+
+      img.onerror = () => {
+        downloadFromCanvas(canvas);
+      };
     } catch (err) {
       console.error('Share or download error:', err);
     }
@@ -296,6 +304,7 @@ export default function WaitlistModal({
         className="modal-dialog modal-dialog-centered"
         style={{
           maxWidth: showPassCard ? '380px' : '500px',
+          width: '100%',
           margin: '0.5rem auto',
           transition: 'max-width 0.25s ease',
         }}
@@ -522,37 +531,38 @@ export default function WaitlistModal({
             /* 2. ACCURATE & PHONE-FRIENDLY WAITLIST PASS CARD SCREEN     */
             /* ========================================================== */
             <div
-              className="p-2 p-sm-3 text-center position-relative tz-pass-card-wrapper d-flex flex-column align-items-center"
+              className="p-2.5 p-sm-3 text-center position-relative tz-pass-card-wrapper d-flex flex-column align-items-center"
               onTouchStart={() => setIsTimerPaused(true)}
               onTouchEnd={() => setIsTimerPaused(false)}
               onMouseEnter={() => setIsTimerPaused(true)}
               onMouseLeave={() => setIsTimerPaused(false)}
             >
-              {/* Phone-optimized Card Frame (proportional 576:1024, fits in phone viewports) */}
+              {/* Phone-optimized Card Frame - definite width and natural image scaling */}
               <div
-                className="position-relative mx-auto rounded-4 overflow-hidden shadow-2xl"
+                className="position-relative mx-auto rounded-4 overflow-hidden shadow-lg"
                 style={{
-                  height: 'min(64vh, 510px)',
-                  aspectRatio: '576 / 1024',
-                  width: 'auto',
-                  maxWidth: 'calc(100vw - 32px)',
+                  width: 'min(310px, calc(64vh * 0.5625))',
+                  maxWidth: 'calc(100vw - 40px)',
                   backgroundColor: '#f8fafc',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
-                  containerType: 'inline-size',
-                  transform: 'translateZ(0)',
                 }}
               >
-                {/* Official Pass Background Template */}
+                {/* Official Pass Background Template (Dual-source: bundled import + public fallback) */}
                 <img
-                  src="/travelzync_waitlist_pass_template.png"
+                  src={passImageSource}
                   alt="TravelZync Official Waitlist Pass"
-                  className="w-100 h-100"
                   style={{
-                    objectFit: 'cover',
+                    width: '100%',
+                    height: 'auto',
                     display: 'block',
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
                     pointerEvents: 'none',
+                  }}
+                  onError={(e) => {
+                    if (e.target.src !== '/travelzync_waitlist_pass_template.png') {
+                      e.target.src = '/travelzync_waitlist_pass_template.png';
+                    }
                   }}
                 />
 
@@ -560,13 +570,13 @@ export default function WaitlistModal({
                 <div
                   className="position-absolute d-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-sm"
                   style={{
-                    top: '10px',
-                    left: '10px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.76)',
+                    top: '8px',
+                    left: '8px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.8)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
                     color: '#ffffff',
-                    fontSize: 'clamp(0.68rem, 2.4cqi, 0.74rem)',
+                    fontSize: '0.7rem',
                     fontWeight: 600,
                     letterSpacing: '0.02em',
                     zIndex: 20,
@@ -588,27 +598,27 @@ export default function WaitlistModal({
                   onClick={handleClosePassCard}
                   className="btn btn-light rounded-circle shadow-lg position-absolute d-flex align-items-center justify-content-center p-0"
                   style={{
-                    top: '9px',
-                    right: '9px',
-                    width: '38px',
-                    height: '38px',
-                    minWidth: '38px',
-                    minHeight: '38px',
+                    top: '8px',
+                    right: '8px',
+                    width: '36px',
+                    height: '36px',
+                    minWidth: '36px',
+                    minHeight: '36px',
                     zIndex: 25,
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                    border: '1px solid rgba(0, 0, 0, 0.15)',
                     color: '#0f172a',
                     cursor: 'pointer',
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18)',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.22)',
                   }}
                   title="Close pass card"
                   aria-label="Close pass card"
                 >
-                  <X size={18} strokeWidth={2.4} />
+                  <X size={18} strokeWidth={2.5} />
                 </button>
 
                 {/* Accurate Dynamic Username Overlay - Exactly in place of 'Razal Rahman' */}
@@ -629,7 +639,7 @@ export default function WaitlistModal({
                       fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
                       fontWeight: 800,
                       color: '#0f172a',
-                      fontSize: `calc(${nameScale} * clamp(14px, 4.7cqi, 27px))`,
+                      fontSize: `calc(${nameScale} * clamp(13px, 4.2vw, 17px))`,
                       letterSpacing: '-0.02em',
                       lineHeight: 1.15,
                       whiteSpace: 'nowrap',
@@ -645,7 +655,7 @@ export default function WaitlistModal({
               {/* Phone-optimized Action Buttons Bar */}
               <div
                 className="d-flex align-items-center justify-content-center gap-2 mt-2.5 w-100"
-                style={{ maxWidth: '340px' }}
+                style={{ maxWidth: '310px' }}
               >
                 <button
                   type="button"
