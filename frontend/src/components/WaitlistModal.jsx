@@ -531,20 +531,24 @@ export default function WaitlistModal({
             /* 2. ACCURATE & PHONE-FRIENDLY WAITLIST PASS CARD SCREEN     */
             /* ========================================================== */
             <div
-              className="p-2.5 p-sm-3 text-center position-relative tz-pass-card-wrapper d-flex flex-column align-items-center"
+              className="p-3 p-sm-4 text-center position-relative tz-pass-card-wrapper d-flex flex-column align-items-center"
+              style={{
+                padding: 'clamp(1rem, 3.5vw, 1.5rem)',
+              }}
               onTouchStart={() => setIsTimerPaused(true)}
               onTouchEnd={() => setIsTimerPaused(false)}
               onMouseEnter={() => setIsTimerPaused(true)}
               onMouseLeave={() => setIsTimerPaused(false)}
             >
-              {/* Phone-optimized Card Frame - definite width and natural image scaling */}
+              {/* Phone-optimized Card Frame with generous padding and natural image scaling */}
               <div
-                className="position-relative mx-auto rounded-4 overflow-hidden shadow-lg"
+                className="position-relative mx-auto overflow-hidden shadow-lg"
                 style={{
-                  width: 'min(310px, calc(64vh * 0.5625))',
-                  maxWidth: 'calc(100vw - 40px)',
+                  width: 'min(315px, calc(62vh * 0.5625))',
+                  maxWidth: 'calc(100vw - 44px)',
                   backgroundColor: '#f8fafc',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '22px',
                 }}
               >
                 {/* Official Pass Background Template (Dual-source: bundled import + public fallback) */}
@@ -555,6 +559,7 @@ export default function WaitlistModal({
                     width: '100%',
                     height: 'auto',
                     display: 'block',
+                    borderRadius: '22px',
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
                     pointerEvents: 'none',
@@ -568,15 +573,15 @@ export default function WaitlistModal({
 
                 {/* Auto-closing Countdown Badge (shows 'Paused' while holding on phone) */}
                 <div
-                  className="position-absolute d-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-sm"
+                  className="position-absolute d-flex align-items-center gap-1.5 px-2.5 py-1.5 rounded-pill shadow-sm"
                   style={{
-                    top: '8px',
-                    left: '8px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                    top: '12px',
+                    left: '12px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.82)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
                     color: '#ffffff',
-                    fontSize: '0.7rem',
+                    fontSize: '0.72rem',
                     fontWeight: 600,
                     letterSpacing: '0.02em',
                     zIndex: 20,
@@ -598,27 +603,27 @@ export default function WaitlistModal({
                   onClick={handleClosePassCard}
                   className="btn btn-light rounded-circle shadow-lg position-absolute d-flex align-items-center justify-content-center p-0"
                   style={{
-                    top: '8px',
-                    right: '8px',
-                    width: '36px',
-                    height: '36px',
-                    minWidth: '36px',
-                    minHeight: '36px',
+                    top: '12px',
+                    right: '12px',
+                    width: '38px',
+                    height: '38px',
+                    minWidth: '38px',
+                    minHeight: '38px',
                     zIndex: 25,
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.96)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(0, 0, 0, 0.15)',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
                     color: '#0f172a',
                     cursor: 'pointer',
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.22)',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
                   }}
                   title="Close pass card"
                   aria-label="Close pass card"
                 >
-                  <X size={18} strokeWidth={2.5} />
+                  <X size={18} strokeWidth={2.4} />
                 </button>
 
                 {/* Accurate Dynamic Username Overlay - Exactly in place of 'Razal Rahman' */}
@@ -652,26 +657,34 @@ export default function WaitlistModal({
                 </div>
               </div>
 
-              {/* Phone-optimized Action Buttons Bar */}
+              {/* Phone-optimized Action Buttons Bar with Good Padding */}
               <div
-                className="d-flex align-items-center justify-content-center gap-2 mt-2.5 w-100"
-                style={{ maxWidth: '310px' }}
+                className="d-flex align-items-center justify-content-center gap-2.5 mt-3 w-100"
+                style={{ maxWidth: '315px' }}
               >
                 <button
                   type="button"
-                  className="btn btn-dark rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold shadow-sm"
+                  className="btn btn-dark rounded-pill py-2.5 px-3.5 small d-flex align-items-center justify-content-center gap-2 flex-grow-1 fw-bold shadow-sm"
                   onClick={handleShareOrDownloadPass}
-                  style={{ fontSize: '0.82rem', touchAction: 'manipulation' }}
+                  style={{
+                    fontSize: '0.84rem',
+                    touchAction: 'manipulation',
+                    letterSpacing: '-0.01em',
+                  }}
                 >
-                  <Download size={14} />
+                  <Download size={15} />
                   <span>Save / Share Pass</span>
                 </button>
 
                 <button
                   type="button"
-                  className="btn btn-outline-secondary rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1 fw-semibold"
+                  className="btn btn-outline-secondary rounded-pill py-2.5 px-3.5 small d-flex align-items-center justify-content-center gap-1.5 fw-semibold"
                   onClick={handleClosePassCard}
-                  style={{ fontSize: '0.82rem', touchAction: 'manipulation' }}
+                  style={{
+                    fontSize: '0.84rem',
+                    touchAction: 'manipulation',
+                    borderWidth: '1.5px',
+                  }}
                 >
                   <span>Close</span>
                 </button>
