@@ -18,28 +18,21 @@ import {
 import { joinWaitlist, getKeralaDistricts } from '../services/api';
 
 /**
- * Format the user's name cleanly in Title Case for the personalized pass.
- * Falls back to name derived from email or 'VIP Member'.
+ * Format the user's name accurately in Title Case for the personalized pass,
+ * properly handling initials, hyphens, and apostrophes (e.g. Razal Rahman, O'Connor, Al-Sayed).
  */
 function formatDisplayName(name, email) {
-  if (name && name.trim()) {
-    return name
-      .trim()
-      .split(/\s+/)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(' ');
+  let raw = (name && name.trim()) || '';
+  if (!raw && email && email.includes('@')) {
+    raw = email.split('@')[0].replace(/[._-]/g, ' ');
   }
-  if (email && email.includes('@')) {
-    const raw = email.split('@')[0].replace(/[._-]/g, ' ');
-    if (raw && raw.trim()) {
-      return raw
-        .trim()
-        .split(/\s+/)
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-        .join(' ');
-    }
-  }
-  return 'VIP Member';
+  if (!raw) return 'TravelZync VIP';
+
+  return raw
+    .toLowerCase()
+    .replace(/(?:^|[\s\-\'])[a-z]/g, (char) => char.toUpperCase())
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export default function WaitlistModal({
@@ -65,6 +58,7 @@ export default function WaitlistModal({
   const [copiedLink, setCopiedLink] = useState(false);
   const [showPassCard, setShowPassCard] = useState(false);
   const [passCountdown, setPassCountdown] = useState(20);
+  const [isTimerPaused, setIsTimerPaused] = useState(false);
 
   const autoShowTimerRef = useRef(null);
   const countdownIntervalRef = useRef(null);
@@ -79,7 +73,7 @@ export default function WaitlistModal({
     getKeralaDistricts().then((data) => setDistricts(data));
   }, []);
 
-  // 20-second auto-close timer when the pass card is displayed
+  // 20-second auto-close timer when the pass card is displayed (pauses on touch/hold for phone users)
   useEffect(() => {
     if (!showPassCard) {
       if (countdownIntervalRef.current) {
@@ -89,8 +83,13 @@ export default function WaitlistModal({
     }
 
     setPassCountdown(20);
+    setIsTimerPaused(false);
+
     countdownIntervalRef.current = setInterval(() => {
       setPassCountdown((prev) => {
+        // Do not decrement if user is holding/touching the card on their phone
+        if (isTimerPaused) return prev;
+
         if (prev <= 1) {
           clearInterval(countdownIntervalRef.current);
           setShowPassCard(false);
@@ -105,7 +104,7 @@ export default function WaitlistModal({
         clearInterval(countdownIntervalRef.current);
       }
     };
-  }, [showPassCard]);
+  }, [showPassCard, isTimerPaused]);
 
   // Clean up all timers on unmount
   useEffect(() => {
@@ -119,6 +118,10 @@ export default function WaitlistModal({
 
   const triggerConfetti = () => {
     try {
+      // Subtle phone vibration feedback if supported
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([30, 40, 30]);
+      }
       confetti({
         particleCount: 80,
         spread: 70,
@@ -144,6 +147,11 @@ export default function WaitlistModal({
       return;
     }
 
+    // Dismiss phone virtual keyboard
+    if (typeof document !== 'undefined' && document.activeElement) {
+      document.activeElement.blur();
+    }
+
     setIsLoading(true);
 
     const res = await joinWaitlist(formData);
@@ -159,7 +167,7 @@ export default function WaitlistModal({
       if (autoShowTimerRef.current) clearTimeout(autoShowTimerRef.current);
       autoShowTimerRef.current = setTimeout(() => {
         setShowPassCard(true);
-      }, 1600);
+      }, 1500);
     } else {
       setErrorMsg(
         res.data?.message ||
@@ -183,7 +191,8 @@ export default function WaitlistModal({
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
-  const handleClosePassCard = () => {
+  const handleClosePassCard = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     setShowPassCard(false);
   };
@@ -197,14 +206,12 @@ export default function WaitlistModal({
 
   const displayName = formatDisplayName(formData.full_name, formData.email);
   const nameLength = displayName.length;
-  const dynamicFontSize =
-    nameLength > 24
-      ? 'clamp(0.85rem, 3.2vw, 1.05rem)'
-      : nameLength > 16
-      ? 'clamp(0.98rem, 3.8vw, 1.2rem)'
-      : 'clamp(1.15rem, 4.4vw, 1.38rem)';
 
-  const handleDownloadPass = () => {
+  // Accurate typography scale based on character count so names never wrap or overflow
+  const nameScale = nameLength > 24 ? 0.72 : nameLength > 16 ? 0.86 : 1.0;
+
+  // Phone-friendly Share or Download handler using Web Share API with Canvas fallback
+  const handleShareOrDownloadPass = async () => {
     try {
       const canvas = document.createElement('canvas');
       canvas.width = 576;
@@ -213,51 +220,107 @@ export default function WaitlistModal({
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.src = '/travelzync_waitlist_pass_template.png';
-      img.onload = () => {
+
+      img.onload = async () => {
         ctx.drawImage(img, 0, 0, 576, 1024);
 
-        let fontSize = 27;
-        if (nameLength > 24) fontSize = 18;
-        else if (nameLength > 16) fontSize = 22;
+        // Accurate font proportions matching original image
+        let ptSize = 27;
+        if (nameLength > 24) ptSize = 19;
+        else if (nameLength > 16) ptSize = 23;
 
-        ctx.font = `800 ${fontSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
+        ctx.font = `800 ${ptSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
         ctx.fillStyle = '#0f172a';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(displayName, 288, 356);
 
-        const a = document.createElement('a');
-        a.download = `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
-        a.href = canvas.toDataURL('image/png');
-        a.click();
+        // Native Mobile Share sheet if supported on phone (iOS Safari & Android Chrome)
+        if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+          try {
+            canvas.toBlob(async (blob) => {
+              if (blob) {
+                const file = new File(
+                  [blob],
+                  `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`,
+                  { type: 'image/png' }
+                );
+                if (navigator.canShare({ files: [file] })) {
+                  await navigator.share({
+                    files: [file],
+                    title: 'TravelZync VIP Pass',
+                    text: 'I just reserved my early spot on the TravelZync waitlist! Transforming Kerala public transit.',
+                  });
+                  return;
+                }
+              }
+              downloadFromCanvas(canvas);
+            }, 'image/png');
+            return;
+          } catch (shareErr) {
+            if (shareErr && shareErr.name !== 'AbortError') {
+              downloadFromCanvas(canvas);
+            }
+            return;
+          }
+        }
+
+        downloadFromCanvas(canvas);
       };
     } catch (err) {
-      console.error('Download pass error:', err);
+      console.error('Share or download error:', err);
     }
+  };
+
+  const downloadFromCanvas = (canvas) => {
+    const a = document.createElement('a');
+    a.download = `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
   };
 
   return (
     <div
       className="modal fade show d-block"
       tabIndex="-1"
-      style={{ backgroundColor: 'rgba(17, 24, 39, 0.78)', zIndex: 1070 }}
+      style={{
+        backgroundColor: 'rgba(17, 24, 39, 0.82)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
+        zIndex: 1070,
+        padding: '0.5rem',
+      }}
       onClick={handleFullClose}
     >
       <div
-        className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+        className="modal-dialog modal-dialog-centered"
         style={{
-          maxWidth: showPassCard ? '410px' : '500px',
+          maxWidth: showPassCard ? '380px' : '500px',
+          margin: '0.5rem auto',
           transition: 'max-width 0.25s ease',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden position-relative">
-          {/* Main Close Button (Top right when on form or standard confirmation) */}
+        <div
+          className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden position-relative"
+          style={{
+            backgroundColor: '#ffffff',
+            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.45)',
+          }}
+        >
+          {/* Main Close Button (for form or standard confirmation) */}
           {!showPassCard && (
             <button
               type="button"
               className="btn btn-light rounded-circle position-absolute top-3 end-3 p-1.5 d-flex align-items-center justify-content-center shadow-sm"
-              style={{ top: '12px', right: '12px', width: '36px', height: '36px', zIndex: 10 }}
+              style={{
+                top: '12px',
+                right: '12px',
+                width: '38px',
+                height: '38px',
+                zIndex: 10,
+                touchAction: 'manipulation',
+              }}
               onClick={handleFullClose}
               aria-label="Close dialog"
             >
@@ -330,11 +393,13 @@ export default function WaitlistModal({
                       placeholder="you@domain.com"
                       className="form-control border-start-0 ps-1"
                       id="modal-email-input"
+                      inputMode="email"
+                      autoCapitalize="none"
                     />
                   </div>
                 </div>
 
-                {/* Full Name (Used for Personalized Pass) */}
+                {/* Full Name (For Personalized Pass) */}
                 <div className="mb-2.5">
                   <label className="form-label small fw-semibold text-dark mb-1">
                     Full Name <span className="text-muted fw-normal">(For your personalized pass)</span>
@@ -350,6 +415,7 @@ export default function WaitlistModal({
                       placeholder="e.g. Razal Rahman"
                       className="form-control border-start-0 ps-1"
                       id="modal-name-input"
+                      autoCapitalize="words"
                     />
                   </div>
                 </div>
@@ -370,6 +436,7 @@ export default function WaitlistModal({
                       placeholder="+91 98470 00000"
                       className="form-control border-start-0 ps-1"
                       id="modal-phone-input"
+                      inputMode="tel"
                     />
                   </div>
                 </div>
@@ -434,6 +501,7 @@ export default function WaitlistModal({
                   disabled={isLoading}
                   className="btn btn-tz-primary w-100 py-2.5 justify-content-center fw-bold"
                   id="modal-submit-waitlist-btn"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   {isLoading ? (
                     <div className="d-flex align-items-center justify-content-center gap-2">
@@ -451,18 +519,27 @@ export default function WaitlistModal({
             </div>
           ) : showPassCard ? (
             /* ========================================================== */
-            /* 2. PERSONALIZED WAITLIST PASS CARD SCREEN                  */
+            /* 2. ACCURATE & PHONE-FRIENDLY WAITLIST PASS CARD SCREEN     */
             /* ========================================================== */
-            <div className="p-3 p-sm-3.5 text-center position-relative">
-              {/* Pass Card Container */}
+            <div
+              className="p-2 p-sm-3 text-center position-relative tz-pass-card-wrapper d-flex flex-column align-items-center"
+              onTouchStart={() => setIsTimerPaused(true)}
+              onTouchEnd={() => setIsTimerPaused(false)}
+              onMouseEnter={() => setIsTimerPaused(true)}
+              onMouseLeave={() => setIsTimerPaused(false)}
+            >
+              {/* Phone-optimized Card Frame (proportional 576:1024, fits in phone viewports) */}
               <div
                 className="position-relative mx-auto rounded-4 overflow-hidden shadow-2xl"
                 style={{
-                  width: '100%',
-                  maxWidth: '350px',
+                  height: 'min(64vh, 510px)',
                   aspectRatio: '576 / 1024',
+                  width: 'auto',
+                  maxWidth: 'calc(100vw - 32px)',
                   backgroundColor: '#f8fafc',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
+                  containerType: 'inline-size',
+                  transform: 'translateZ(0)',
                 }}
               >
                 {/* Official Pass Background Template */}
@@ -470,64 +547,78 @@ export default function WaitlistModal({
                   src="/travelzync_waitlist_pass_template.png"
                   alt="TravelZync Official Waitlist Pass"
                   className="w-100 h-100"
-                  style={{ objectFit: 'cover', display: 'block' }}
+                  style={{
+                    objectFit: 'cover',
+                    display: 'block',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    pointerEvents: 'none',
+                  }}
                 />
 
-                {/* Auto-closing Countdown Badge */}
+                {/* Auto-closing Countdown Badge (shows 'Paused' while holding on phone) */}
                 <div
                   className="position-absolute d-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-sm"
                   style={{
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.72)',
+                    top: '10px',
+                    left: '10px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.76)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
                     color: '#ffffff',
-                    fontSize: '0.72rem',
+                    fontSize: 'clamp(0.68rem, 2.4cqi, 0.74rem)',
                     fontWeight: 600,
                     letterSpacing: '0.02em',
                     zIndex: 20,
+                    pointerEvents: 'none',
                   }}
                 >
                   <span
-                    className="rounded-circle bg-danger d-inline-block"
+                    className={`rounded-circle d-inline-block ${isTimerPaused ? 'bg-warning' : 'bg-danger'}`}
                     style={{ width: '6px', height: '6px' }}
                   />
-                  <span>Closing in {passCountdown}s</span>
+                  <span>
+                    {isTimerPaused ? 'Paused' : `Closing in ${passCountdown}s`}
+                  </span>
                 </div>
 
-                {/* Small Closing Tab at the Right Corner */}
+                {/* Generous Phone-Friendly Closing Tab (Right Corner) */}
                 <button
                   type="button"
                   onClick={handleClosePassCard}
-                  className="btn btn-light rounded-circle shadow-md position-absolute d-flex align-items-center justify-content-center p-0"
+                  className="btn btn-light rounded-circle shadow-lg position-absolute d-flex align-items-center justify-content-center p-0"
                   style={{
-                    top: '12px',
-                    right: '12px',
-                    width: '32px',
-                    height: '32px',
+                    top: '9px',
+                    right: '9px',
+                    width: '38px',
+                    height: '38px',
+                    minWidth: '38px',
+                    minHeight: '38px',
                     zIndex: 25,
-                    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
                     color: '#0f172a',
                     cursor: 'pointer',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18)',
                   }}
                   title="Close pass card"
                   aria-label="Close pass card"
                 >
-                  <X size={16} strokeWidth={2.4} />
+                  <X size={18} strokeWidth={2.4} />
                 </button>
 
-                {/* Dynamic Username Overlay - Exactly in place of 'Razal Rahman' */}
+                {/* Accurate Dynamic Username Overlay - Exactly in place of 'Razal Rahman' */}
                 <div
                   className="position-absolute"
                   style={{
                     top: '34.8%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: '82%',
+                    width: '84%',
                     textAlign: 'center',
                     pointerEvents: 'none',
                     zIndex: 10,
@@ -538,7 +629,7 @@ export default function WaitlistModal({
                       fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
                       fontWeight: 800,
                       color: '#0f172a',
-                      fontSize: dynamicFontSize,
+                      fontSize: `calc(${nameScale} * clamp(14px, 4.7cqi, 27px))`,
                       letterSpacing: '-0.02em',
                       lineHeight: 1.15,
                       whiteSpace: 'nowrap',
@@ -551,25 +642,28 @@ export default function WaitlistModal({
                 </div>
               </div>
 
-              {/* Action Buttons Below the Card */}
+              {/* Phone-optimized Action Buttons Bar */}
               <div
-                className="d-flex align-items-center justify-content-center gap-2 mt-3 mx-auto"
-                style={{ maxWidth: '350px' }}
+                className="d-flex align-items-center justify-content-center gap-2 mt-2.5 w-100"
+                style={{ maxWidth: '340px' }}
               >
                 <button
                   type="button"
                   className="btn btn-dark rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold shadow-sm"
-                  onClick={handleDownloadPass}
+                  onClick={handleShareOrDownloadPass}
+                  style={{ fontSize: '0.82rem', touchAction: 'manipulation' }}
                 >
-                  <Download size={15} />
-                  <span>Download Pass</span>
+                  <Download size={14} />
+                  <span>Save / Share Pass</span>
                 </button>
+
                 <button
                   type="button"
-                  className="btn btn-outline-secondary rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1.5 fw-semibold"
+                  className="btn btn-outline-secondary rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1 fw-semibold"
                   onClick={handleClosePassCard}
+                  style={{ fontSize: '0.82rem', touchAction: 'manipulation' }}
                 >
-                  <span>Close Card</span>
+                  <span>Close</span>
                 </button>
               </div>
             </div>
@@ -621,7 +715,7 @@ export default function WaitlistModal({
                 type="button"
                 className="btn btn-outline-danger d-flex align-items-center justify-content-center gap-2 py-2.5 rounded-pill fw-bold w-100 mb-2.5 shadow-sm"
                 onClick={() => setShowPassCard(true)}
-                style={{ borderWidth: '1.5px' }}
+                style={{ borderWidth: '1.5px', touchAction: 'manipulation' }}
               >
                 <Sparkles size={16} />
                 <span>View Your Personalized Pass</span>
@@ -632,6 +726,7 @@ export default function WaitlistModal({
                 <button
                   className="btn btn-success d-flex align-items-center justify-content-center gap-2 py-2.5 rounded-pill fw-semibold"
                   onClick={handleWhatsAppShare}
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <Share2 size={16} />
                   <span>Share with Friends on WhatsApp</span>
@@ -640,6 +735,7 @@ export default function WaitlistModal({
                 <button
                   className="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2 py-2 rounded-pill small fw-semibold"
                   onClick={handleCopyShare}
+                  style={{ touchAction: 'manipulation' }}
                 >
                   {copiedLink ? <Check size={16} className="text-success" /> : <Copy size={16} />}
                   <span>{copiedLink ? 'Link Copied to Clipboard!' : 'Copy Referral Link'}</span>
@@ -649,6 +745,7 @@ export default function WaitlistModal({
               <button
                 className="btn btn-dark rounded-pill px-4 py-2 small"
                 onClick={handleFullClose}
+                style={{ touchAction: 'manipulation' }}
               >
                 Done
               </button>
