@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { joinWaitlist, getKeralaDistricts } from '../services/api';
 import passTemplateImg from '../assets/travelzync_waitlist_pass_template.png';
+import passTemplate4kImg from '../assets/travelzync_waitlist_pass_template_4k.png';
 
 /**
  * Format the user's name accurately in Title Case for the personalized pass,
@@ -64,14 +65,30 @@ export default function WaitlistModal({
   const autoShowTimerRef = useRef(null);
   const countdownIntervalRef = useRef(null);
 
-  // Both bundled hashed asset and public root fallback
+  // Both standard responsive display asset and True 4K Ultra HD master asset
   const passImageSource = passTemplateImg || '/travelzync_waitlist_pass_template.png';
+  const pass4kSource = passTemplate4kImg || '/travelzync_waitlist_pass_template_4k.png';
 
+  // Whenever modal opens, ensure clean slate so a new user on the same device starts fresh
   useEffect(() => {
-    if (initialEmail) {
-      setFormData((prev) => ({ ...prev, email: initialEmail }));
+    if (isOpen) {
+      setSuccessResult(null);
+      setShowPassCard(false);
+      setErrorMsg('');
+      setFormData({
+        email: initialEmail || '',
+        full_name: '',
+        phone_number: '',
+        district: '',
+        consent_updates: true,
+        website_hp: '',
+      });
+    } else {
+      setSuccessResult(null);
+      setShowPassCard(false);
+      setErrorMsg('');
     }
-  }, [initialEmail]);
+  }, [isOpen, initialEmail]);
 
   useEffect(() => {
     getKeralaDistricts().then((data) => setDistricts(data));
@@ -122,7 +139,6 @@ export default function WaitlistModal({
 
   const triggerConfetti = () => {
     try {
-      // Subtle phone vibration feedback if supported
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([30, 40, 30]);
       }
@@ -201,11 +217,32 @@ export default function WaitlistModal({
     setShowPassCard(false);
   };
 
+  // Full close handler: if user registered, refreshes page so next user starts 100% fresh
   const handleFullClose = () => {
     if (autoShowTimerRef.current) clearTimeout(autoShowTimerRef.current);
     if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     setShowPassCard(false);
+
+    const hadRegistered = !!successResult;
+
+    setSuccessResult(null);
+    setFormData({
+      email: '',
+      full_name: '',
+      phone_number: '',
+      district: '',
+      consent_updates: true,
+      website_hp: '',
+    });
+    setErrorMsg('');
+
     onClose();
+
+    if (hadRegistered) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    }
   };
 
   const displayName = formatDisplayName(formData.full_name, formData.email);
@@ -214,30 +251,34 @@ export default function WaitlistModal({
   // Accurate typography scale based on character count so names never wrap or overflow
   const nameScale = nameLength > 24 ? 0.74 : nameLength > 16 ? 0.88 : 1.0;
 
-  // Phone-friendly Share or Download handler using Web Share API with Canvas fallback
+  // True 4K Ultra HD (2304 x 4096) Export & Share Handler
   const handleShareOrDownloadPass = async () => {
     try {
       const canvas = document.createElement('canvas');
-      canvas.width = 576;
-      canvas.height = 1024;
+      canvas.width = 2304;
+      canvas.height = 4096;
       const ctx = canvas.getContext('2d');
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.src = passImageSource;
+      img.src = pass4kSource;
 
-      img.onload = async () => {
-        ctx.drawImage(img, 0, 0, 576, 1024);
+      const drawAndExport = () => {
+        ctx.drawImage(img, 0, 0, 2304, 4096);
 
-        // Accurate font proportions matching original image
-        let ptSize = 27;
-        if (nameLength > 24) ptSize = 19;
-        else if (nameLength > 16) ptSize = 23;
+        // Accurate 4K font proportions (4x scale matching 27px @ 576px)
+        let ptSize = 108;
+        if (nameLength > 24) ptSize = 76;
+        else if (nameLength > 16) ptSize = 92;
 
         ctx.font = `800 ${ptSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
         ctx.fillStyle = '#0f172a';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(displayName, 288, 356);
+        ctx.fillText(displayName, 1152, 1424);
 
         // Native Mobile Share sheet if supported on phone (iOS Safari & Android Chrome)
         if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
@@ -246,20 +287,20 @@ export default function WaitlistModal({
               if (blob) {
                 const file = new File(
                   [blob],
-                  `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`,
+                  `TravelZync_Pass_4K_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`,
                   { type: 'image/png' }
                 );
                 if (navigator.canShare({ files: [file] })) {
                   await navigator.share({
                     files: [file],
-                    title: 'TravelZync VIP Pass',
+                    title: 'TravelZync 4K VIP Pass',
                     text: 'I just reserved my early spot on the TravelZync waitlist! Transforming Kerala public transit.',
                   });
                   return;
                 }
               }
               downloadFromCanvas(canvas);
-            }, 'image/png');
+            }, 'image/png', 1.0);
             return;
           } catch (shareErr) {
             if (shareErr && shareErr.name !== 'AbortError') {
@@ -272,8 +313,22 @@ export default function WaitlistModal({
         downloadFromCanvas(canvas);
       };
 
+      img.onload = drawAndExport;
+
       img.onerror = () => {
-        downloadFromCanvas(canvas);
+        // Fallback to standard template if 4k source was unreachable
+        const fallback = new Image();
+        fallback.crossOrigin = 'anonymous';
+        fallback.src = passImageSource;
+        fallback.onload = () => {
+          ctx.drawImage(fallback, 0, 0, 2304, 4096);
+          ctx.font = '800 108px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif';
+          ctx.fillStyle = '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(displayName, 1152, 1424);
+          downloadFromCanvas(canvas);
+        };
       };
     } catch (err) {
       console.error('Share or download error:', err);
@@ -282,8 +337,8 @@ export default function WaitlistModal({
 
   const downloadFromCanvas = (canvas) => {
     const a = document.createElement('a');
-    a.download = `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
-    a.href = canvas.toDataURL('image/png');
+    a.download = `TravelZync_Pass_4K_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+    a.href = canvas.toDataURL('image/png', 1.0);
     a.click();
   };
 
@@ -296,16 +351,16 @@ export default function WaitlistModal({
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
         zIndex: 1070,
-        padding: '0.5rem',
+        padding: 'clamp(0.75rem, 3vw, 1.25rem)',
       }}
       onClick={handleFullClose}
     >
       <div
         className="modal-dialog modal-dialog-centered"
         style={{
-          maxWidth: showPassCard ? '380px' : '500px',
+          maxWidth: showPassCard ? '390px' : '500px',
           width: '100%',
-          margin: '0.5rem auto',
+          margin: 'auto',
           transition: 'max-width 0.25s ease',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -673,7 +728,7 @@ export default function WaitlistModal({
                   }}
                 >
                   <Download size={15} />
-                  <span>Save / Share Pass</span>
+                  <span>Download 4K Pass</span>
                 </button>
 
                 <button
@@ -741,7 +796,7 @@ export default function WaitlistModal({
                 style={{ borderWidth: '1.5px', touchAction: 'manipulation' }}
               >
                 <Sparkles size={16} />
-                <span>View Your Personalized Pass</span>
+                <span>View Your 4K Personalized Pass</span>
               </button>
 
               {/* Viral Share Buttons */}
