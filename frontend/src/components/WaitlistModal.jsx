@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -12,8 +12,35 @@ import {
   Share2,
   Copy,
   Check,
+  Download,
+  Sparkles,
 } from 'lucide-react';
 import { joinWaitlist, getKeralaDistricts } from '../services/api';
+
+/**
+ * Format the user's name cleanly in Title Case for the personalized pass.
+ * Falls back to name derived from email or 'VIP Member'.
+ */
+function formatDisplayName(name, email) {
+  if (name && name.trim()) {
+    return name
+      .trim()
+      .split(/\s+/)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+  }
+  if (email && email.includes('@')) {
+    const raw = email.split('@')[0].replace(/[._-]/g, ' ');
+    if (raw && raw.trim()) {
+      return raw
+        .trim()
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+    }
+  }
+  return 'VIP Member';
+}
 
 export default function WaitlistModal({
   isOpen,
@@ -36,6 +63,11 @@ export default function WaitlistModal({
   const [errorMsg, setErrorMsg] = useState('');
   const [successResult, setSuccessResult] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [showPassCard, setShowPassCard] = useState(false);
+  const [passCountdown, setPassCountdown] = useState(20);
+
+  const autoShowTimerRef = useRef(null);
+  const countdownIntervalRef = useRef(null);
 
   useEffect(() => {
     if (initialEmail) {
@@ -45,6 +77,42 @@ export default function WaitlistModal({
 
   useEffect(() => {
     getKeralaDistricts().then((data) => setDistricts(data));
+  }, []);
+
+  // 20-second auto-close timer when the pass card is displayed
+  useEffect(() => {
+    if (!showPassCard) {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+      return;
+    }
+
+    setPassCountdown(20);
+    countdownIntervalRef.current = setInterval(() => {
+      setPassCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownIntervalRef.current);
+          setShowPassCard(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
+  }, [showPassCard]);
+
+  // Clean up all timers on unmount
+  useEffect(() => {
+    return () => {
+      if (autoShowTimerRef.current) clearTimeout(autoShowTimerRef.current);
+      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    };
   }, []);
 
   if (!isOpen) return null;
@@ -87,6 +155,11 @@ export default function WaitlistModal({
       if (onRegistrationSuccess) {
         onRegistrationSuccess(res.data);
       }
+      // After showing the spot confirmation screen, automatically present the personalized card
+      if (autoShowTimerRef.current) clearTimeout(autoShowTimerRef.current);
+      autoShowTimerRef.current = setTimeout(() => {
+        setShowPassCard(true);
+      }, 1600);
     } else {
       setErrorMsg(
         res.data?.message ||
@@ -110,32 +183,92 @@ export default function WaitlistModal({
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
+  const handleClosePassCard = () => {
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    setShowPassCard(false);
+  };
+
+  const handleFullClose = () => {
+    if (autoShowTimerRef.current) clearTimeout(autoShowTimerRef.current);
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    setShowPassCard(false);
+    onClose();
+  };
+
+  const displayName = formatDisplayName(formData.full_name, formData.email);
+  const nameLength = displayName.length;
+  const dynamicFontSize =
+    nameLength > 24
+      ? 'clamp(0.85rem, 3.2vw, 1.05rem)'
+      : nameLength > 16
+      ? 'clamp(0.98rem, 3.8vw, 1.2rem)'
+      : 'clamp(1.15rem, 4.4vw, 1.38rem)';
+
+  const handleDownloadPass = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 576;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = '/travelzync_waitlist_pass_template.png';
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, 576, 1024);
+
+        let fontSize = 27;
+        if (nameLength > 24) fontSize = 18;
+        else if (nameLength > 16) fontSize = 22;
+
+        ctx.font = `800 ${fontSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
+        ctx.fillStyle = '#0f172a';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(displayName, 288, 356);
+
+        const a = document.createElement('a');
+        a.download = `TravelZync_Pass_${displayName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+    } catch (err) {
+      console.error('Download pass error:', err);
+    }
+  };
+
   return (
     <div
       className="modal fade show d-block"
       tabIndex="-1"
-      style={{ backgroundColor: 'rgba(17, 24, 39, 0.75)', zIndex: 1070 }}
-      onClick={onClose}
+      style={{ backgroundColor: 'rgba(17, 24, 39, 0.78)', zIndex: 1070 }}
+      onClick={handleFullClose}
     >
       <div
         className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-        style={{ maxWidth: '500px' }}
+        style={{
+          maxWidth: showPassCard ? '410px' : '500px',
+          transition: 'max-width 0.25s ease',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-content border-0 rounded-4 shadow-2xl overflow-hidden position-relative">
-          {/* Close Button */}
-          <button
-            type="button"
-            className="btn btn-light rounded-circle position-absolute top-3 end-3 p-1.5 d-flex align-items-center justify-content-center shadow-sm"
-            style={{ top: '12px', right: '12px', width: '36px', height: '36px', zIndex: 10 }}
-            onClick={onClose}
-            aria-label="Close dialog"
-          >
-            <X size={18} />
-          </button>
+          {/* Main Close Button (Top right when on form or standard confirmation) */}
+          {!showPassCard && (
+            <button
+              type="button"
+              className="btn btn-light rounded-circle position-absolute top-3 end-3 p-1.5 d-flex align-items-center justify-content-center shadow-sm"
+              style={{ top: '12px', right: '12px', width: '36px', height: '36px', zIndex: 10 }}
+              onClick={handleFullClose}
+              aria-label="Close dialog"
+            >
+              <X size={18} />
+            </button>
+          )}
 
           {!successResult ? (
-            /* WAITLIST SIGNUP FORM */
+            /* ========================================================== */
+            /* 1. WAITLIST SIGNUP FORM                                   */
+            /* ========================================================== */
             <div className="p-3 p-sm-4 p-md-5">
               {/* Header with Official Logo */}
               <div className="text-center mb-3 mb-sm-4">
@@ -201,10 +334,10 @@ export default function WaitlistModal({
                   </div>
                 </div>
 
-                {/* Full Name (Optional) */}
+                {/* Full Name (Used for Personalized Pass) */}
                 <div className="mb-2.5">
                   <label className="form-label small fw-semibold text-dark mb-1">
-                    Full Name <span className="text-muted fw-normal">(Optional)</span>
+                    Full Name <span className="text-muted fw-normal">(For your personalized pass)</span>
                   </label>
                   <div className="input-group">
                     <span className="input-group-text bg-light border-end-0 text-muted px-2.5">
@@ -214,7 +347,7 @@ export default function WaitlistModal({
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      placeholder="e.g. Rahul Menon"
+                      placeholder="e.g. Razal Rahman"
                       className="form-control border-start-0 ps-1"
                       id="modal-name-input"
                     />
@@ -316,8 +449,134 @@ export default function WaitlistModal({
                 </button>
               </form>
             </div>
+          ) : showPassCard ? (
+            /* ========================================================== */
+            /* 2. PERSONALIZED WAITLIST PASS CARD SCREEN                  */
+            /* ========================================================== */
+            <div className="p-3 p-sm-3.5 text-center position-relative">
+              {/* Pass Card Container */}
+              <div
+                className="position-relative mx-auto rounded-4 overflow-hidden shadow-2xl"
+                style={{
+                  width: '100%',
+                  maxWidth: '350px',
+                  aspectRatio: '576 / 1024',
+                  backgroundColor: '#f8fafc',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                }}
+              >
+                {/* Official Pass Background Template */}
+                <img
+                  src="/travelzync_waitlist_pass_template.png"
+                  alt="TravelZync Official Waitlist Pass"
+                  className="w-100 h-100"
+                  style={{ objectFit: 'cover', display: 'block' }}
+                />
+
+                {/* Auto-closing Countdown Badge */}
+                <div
+                  className="position-absolute d-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-sm"
+                  style={{
+                    top: '12px',
+                    left: '12px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.72)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    color: '#ffffff',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.02em',
+                    zIndex: 20,
+                  }}
+                >
+                  <span
+                    className="rounded-circle bg-danger d-inline-block"
+                    style={{ width: '6px', height: '6px' }}
+                  />
+                  <span>Closing in {passCountdown}s</span>
+                </div>
+
+                {/* Small Closing Tab at the Right Corner */}
+                <button
+                  type="button"
+                  onClick={handleClosePassCard}
+                  className="btn btn-light rounded-circle shadow-md position-absolute d-flex align-items-center justify-content-center p-0"
+                  style={{
+                    top: '12px',
+                    right: '12px',
+                    width: '32px',
+                    height: '32px',
+                    zIndex: 25,
+                    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    color: '#0f172a',
+                    cursor: 'pointer',
+                  }}
+                  title="Close pass card"
+                  aria-label="Close pass card"
+                >
+                  <X size={16} strokeWidth={2.4} />
+                </button>
+
+                {/* Dynamic Username Overlay - Exactly in place of 'Razal Rahman' */}
+                <div
+                  className="position-absolute"
+                  style={{
+                    top: '34.8%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '82%',
+                    textAlign: 'center',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+                      fontWeight: 800,
+                      color: '#0f172a',
+                      fontSize: dynamicFontSize,
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1.15,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {displayName}
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons Below the Card */}
+              <div
+                className="d-flex align-items-center justify-content-center gap-2 mt-3 mx-auto"
+                style={{ maxWidth: '350px' }}
+              >
+                <button
+                  type="button"
+                  className="btn btn-dark rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1.5 flex-grow-1 fw-semibold shadow-sm"
+                  onClick={handleDownloadPass}
+                >
+                  <Download size={15} />
+                  <span>Download Pass</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-pill py-2 px-3 small d-flex align-items-center justify-content-center gap-1.5 fw-semibold"
+                  onClick={handleClosePassCard}
+                >
+                  <span>Close Card</span>
+                </button>
+              </div>
+            </div>
           ) : (
-            /* SUCCESS CONFIRMATION SCREEN */
+            /* ========================================================== */
+            /* 3. SPOT CONFIRMED SUCCESS DETAILS SCREEN                   */
+            /* ========================================================== */
             <div className="p-3 p-sm-4 p-md-5 text-center">
               <div
                 className="rounded-circle mx-auto p-3 d-flex align-items-center justify-content-center mb-2.5 shadow-md"
@@ -357,6 +616,17 @@ export default function WaitlistModal({
                 </div>
               </div>
 
+              {/* View Personalized Pass Button */}
+              <button
+                type="button"
+                className="btn btn-outline-danger d-flex align-items-center justify-content-center gap-2 py-2.5 rounded-pill fw-bold w-100 mb-2.5 shadow-sm"
+                onClick={() => setShowPassCard(true)}
+                style={{ borderWidth: '1.5px' }}
+              >
+                <Sparkles size={16} />
+                <span>View Your Personalized Pass</span>
+              </button>
+
               {/* Viral Share Buttons */}
               <div className="d-flex flex-column gap-2 mb-3">
                 <button
@@ -378,7 +648,7 @@ export default function WaitlistModal({
 
               <button
                 className="btn btn-dark rounded-pill px-4 py-2 small"
-                onClick={onClose}
+                onClick={handleFullClose}
               >
                 Done
               </button>

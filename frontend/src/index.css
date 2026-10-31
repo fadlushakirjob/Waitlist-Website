@@ -707,3 +707,20 @@ body {
     max-width: calc(100% - 1.5rem) !important;
   }
 }
+
+/* Waitlist Personalized Pass Card Pop-in Animation */
+.tz-pass-card-wrapper {
+  animation: tzCardPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tzCardPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
